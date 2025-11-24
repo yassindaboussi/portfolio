@@ -339,7 +339,7 @@ export default function Page() {
 
           {/* Bouton CV amélioré */}
           <motion.a
-            href="/mnt/data/CV_Daboussi_Yassin.pdf"
+            href="/data/CV_Daboussi_Yassin.pdf"
             className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-500 px-5 py-2.5 rounded-full font-semibold"
             whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.4)" }}
             whileTap={{ scale: 0.95 }}
@@ -387,7 +387,7 @@ export default function Page() {
                   </motion.button>
                 ))}
                 <motion.a
-                  href="/mnt/data/CV_Daboussi_Yassin.pdf"
+                  href="/data/CV_Daboussi_Yassin.pdf"
                   className="text-center bg-gradient-to-r from-purple-600 to-cyan-500 py-3 rounded-xl flex items-center justify-center gap-2 mt-2"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
