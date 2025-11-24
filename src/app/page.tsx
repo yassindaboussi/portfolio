@@ -241,52 +241,39 @@ export default function Page() {
           <p className="text-xl text-gray-400">Full-Stack • Mobile • DevOps • Cloud</p>
         </motion.div>
 
-  <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
-    {[
-      { name: 'Symfony', icon: 'symfony' },
-      { name: 'React', icon: 'react' },
-      { name: 'Node.js', icon: 'nodejs' },
-      { name: 'Kotlin', icon: 'kotlin' },
-      { name: 'Flutter', icon: 'flutter' },
-      { name: 'MySQL', icon: 'mysql' },
-      { name: 'MongoDB', icon: 'mongodb' },
-      { name: 'SnowFlake', icon: 'snowflake' },
-      { name: 'AWS', icon: 'aws' },
-      { name: 'Docker', icon: 'docker' }
-        ].map((tech, i) => (
-      <motion.div
-        key={tech.name}
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: i * 0.05 }}
-        className="group"
-      >
-        <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20">
-          <div className="w-16 h-16 mx-auto mb-3">
-            {/* Tu peux remplacer ces SVG par tes propres icônes ou utiliser lucide-react si tu préfères */}
-            {tech.icon === 'react' && (
-              <svg viewBox="0 0 24 24" className="w-full h-full text-cyan-400">
-                <path fill="currentColor" d="M12 1.5c-1.48 0-2.92.37-4.2 1.07l.74 1.28A9.5 9.5 0 0 1 12 3c1.48 0 2.92.37 4.2 1.07l-.74-1.28A10.98 10.98 0 0 0 12 1.5zM6.5 4.5a10.98 10.98 0 0 0-4.2 4.2l1.28.74A9.5 9.5 0 0 1 6.5 6.5l-.74-1.28A10.98 10.98 0 0 0 6.5 4.5zm11 0a10.98 10.98 0 0 0-4.2-4.2l-.74 1.28A9.5 9.5 0 0 1 17.5 6.5l.74-1.28A10.98 10.98 0 0 0 17.5 4.5zM3 12a9 9 0 0 1 1.5-4.95l1.28.74A7.5 7.5 0 0 0 4.5 12c0 1.48.43 2.86 1.16 4.04l-1.28.74A9 9 0 0 1 3 12zm18 0a9 9 0 0 1-1.5 4.95l-1.28-.74A7.5 7.5 0 0 0 19.5 12a7.5 7.5 0 0 0-1.16-4.04l1.28-.74A9 9 0 0 1 21 12zm-6.5-6.5l.74 1.28a7.5 7.5 0 0 1 2.76 2.76l1.28-.74a9 9 0 0 0-4.78-3.3zm-9 0a9 9 0 0 0-4.78 3.3l1.28.74a7.5 7.5 0 0 1 2.76-2.76l.74-1.28zM4.5 17.5l-.74 1.28A10.98 10.98 0 0 0 12 22.5c3.03 0 5.78-1.23 7.78-3.22l-.74-1.28A9.48 9.48 0 0 1 12 19.5a9.48 9.48 0 0 1-7.5-3.5zm7.5-3a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-              </svg>
-            )}
-            {tech.icon === 'nextjs' && <div className="w-full h-full bg-white rounded-full flex items-center justify-center"><span className="text-black font-bold text-2xl">N</span></div>}
-            {tech.icon === 'typescript' && <svg viewBox="0 0 24 24" className="w-full h-full text-blue-500"><path fill="currentColor" d="M3 3h18v18H3V3zm16.5 13.65V19h-2.15v-2.35H19.5zM13.8 19H11v-7.85h2.8V19zm-5.6 0H5.4V9.85h2.8V19zm11.4-9.35v1.85h-2.15v-1.85h2.15zm0-3.7v1.85h-2.15V9.6h2.15zm0-3.7V7.8h-2.15V5.95h2.15z"/></svg>}
-            {tech.icon === 'nodejs' && <svg viewBox="0 0 24 24" className="w-full h-full text-green-500"><path fill="currentColor" d="M12.522 2.21c-5.445 0-9.878 4.434-9.878 9.878 0 4.353 2.82 8.043 6.73 9.354.492.09.67-.214.67-.475 0-.235-.009-.858-.013-1.684-2.737.595-3.316-1.32-3.316-1.32-.448-1.138-1.094-1.44-1.094-1.44-.895-.612.068-.6.068-.6 1.002.07 1.53 1.03 1.53 1.03.89 1.525 2.337 1.085 2.908.83.09-.645.348-1.085.634-1.335-2.19-.25-4.492-1.095-4.492-4.873 0-1.076.385-1.956 1.016-2.646-.102-.25-.44-1.252.097-2.61 0 0 .828-.266 2.713 1.01a9.5 9.5 0 0 1 2.47-.334c.838.004 1.682.114 2.47.334 1.884-1.276 2.712-1.01 2.712-1.01.537 1.358.2 2.36.098 2.61.632.69 1.015 1.57 1.015 2.646 0 3.79-2.305 4.62-4.502 4.868.354.305.67.908.67 1.83 0 1.32-.012 2.386-.012 2.71 0 .263.177.57.682.474 3.908-1.31 6.726-5 6.726-9.353 0-5.444-4.433-9.878-9.878-9.878z"/></svg>}
-            {/* Ajoute les autres icônes ou utilise simplement le nom si tu veux plus simple */}
-            {![
-              'react','nextjs','typescript','nodejs'
-            ].includes(tech.icon) && (
-              <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-gray-400">
-                {tech.name.slice(0,2)}
-              </div>
-            )}
-          </div>
-          <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
-        </div>
-      </motion.div>
-    ))}
-  </div>
+<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
+  {[
+    { name: 'Symfony', icon: 'symfony' },
+    { name: 'React', icon: 'react' },
+    { name: 'Node.js', icon: 'nodejs' },
+    { name: 'Kotlin', icon: 'kotlin' },
+    { name: 'Flutter', icon: 'flutter' },
+    { name: 'MySQL', icon: 'mysql' },
+    { name: 'MongoDB', icon: 'mongodb' },
+    { name: 'SnowFlake', icon: 'snowflake' },
+    { name: 'AWS', icon: 'aws' },
+    { name: 'Docker', icon: 'docker' }
+  ].map((tech, i) => (
+    <motion.div
+      key={tech.name}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: i * 0.05 }}
+      className="group"
+    >
+      <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20 flex flex-col items-center justify-center gap-3 min-h-32">
+        <img 
+          src={`/icons/${tech.icon}.svg`}
+          alt={tech.name}
+          className="w-16 h-16 object-contain"
+        />
+        <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
+      </div>
+    </motion.div>
+  ))}
+</div>
+
 </section>
 
       {/* Projects */}
