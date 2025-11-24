@@ -440,7 +440,7 @@ export default function Page() {
             className="mt-8 flex flex-wrap gap-4"
           >
             <motion.a
-              href="/mnt/data/CV_Daboussi_Yassin.pdf"
+              href="/data/CV_Daboussi_Yassin.pdf"
               className="bg-gradient-to-r from-purple-500 to-cyan-400 px-8 py-4 rounded-full font-semibold flex items-center gap-2"
               whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.4)" }}
               whileTap={{ scale: 0.95 }}
