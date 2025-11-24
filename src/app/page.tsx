@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Github, ExternalLink, Mail, Phone, Download, Sparkles, Calendar } from 'lucide-react';
+import { Menu, X, Github, ExternalLink, Mail, Phone, Download, Sparkles, Calendar, Globe, Smartphone, Monitor } from 'lucide-react';
 
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'desktop'>('all');
+  const [filter, setFilter] = useState<'web' | 'mobile' | 'desktop'>('web');
   const [activeSection, setActiveSection] = useState('home');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,7 +40,6 @@ export default function Page() {
       color: string;
     }> = [];
 
-    // Créer les particules
     for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -59,7 +58,6 @@ export default function Page() {
         particle.x += particle.speedX;
         particle.y += particle.speedY;
         
-        // Rebond sur les bords
         if (particle.x > canvas.width) particle.x = 0;
         if (particle.x < 0) particle.x = canvas.width;
         if (particle.y > canvas.height) particle.y = 0;
@@ -98,7 +96,7 @@ export default function Page() {
       { threshold: 0.5 }
     );
 
-    const sections = ['home', 'about', 'projects', 'contact'];
+    const sections = ['home', 'projects', 'contact'];
     sections.forEach((id) => {
       const element = document.getElementById(id);
       if (element) observer.observe(element);
@@ -118,8 +116,8 @@ export default function Page() {
       title: 'Cotakwira', 
       company: 'Freelance', 
       type: 'web', 
-      desc: 'Gestion d\'équipes, matchs et réservations.', 
-      tech: ['Symfony', 'MySQL'],
+      desc: 'Plateforme complète de gestion d\'équipes sportives avec système de réservation de terrains et organisation de matchs en temps réel.', 
+      tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap'],
       liveUrl: '#',
       codeUrl: '#'
     },
@@ -128,8 +126,8 @@ export default function Page() {
       title: 'Allgo RH', 
       company: 'Allence', 
       type: 'mobile', 
-      desc: 'Application RH native (Jetpack Compose + AWS).', 
-      tech: ['Kotlin', 'AWS'],
+      desc: 'Application mobile RH native développée avec Jetpack Compose, intégrant AWS pour la gestion cloud et synchronisation en temps réel.', 
+      tech: ['Kotlin', 'Jetpack Compose', 'AWS', 'REST API'],
       liveUrl: '#',
       codeUrl: '#'
     },
@@ -138,8 +136,8 @@ export default function Page() {
       title: 'EasyData', 
       company: 'Freelance', 
       type: 'web', 
-      desc: 'Pipeline EPM + intégration Sheets + RBAC.', 
-      tech: ['Node', 'React'],
+      desc: 'Solution EPM avec pipeline de données automatisé, intégration Google Sheets et système RBAC pour la gestion des permissions.', 
+      tech: ['Node.js', 'React', 'PostgreSQL', 'Google API'],
       liveUrl: '#',
       codeUrl: '#'
     },
@@ -148,8 +146,8 @@ export default function Page() {
       title: 'Plateforme de Ticketing', 
       company: 'Kleos', 
       type: 'web', 
-      desc: 'Génération de PDF + QR code.', 
-      tech: ['Symfony', 'Twig'],
+      desc: 'Système de billetterie événementielle avec génération automatique de PDF et codes QR pour validation instantanée à l\'entrée.', 
+      tech: ['Symfony', 'Twig', 'TCPDF', 'MySQL'],
       liveUrl: '#',
       codeUrl: '#'
     },
@@ -158,14 +156,41 @@ export default function Page() {
       title: 'Gestionnaire de Ressources', 
       company: 'Prologic', 
       type: 'desktop', 
-      desc: 'Gestion matériel & rôles (Flutter Desktop).', 
-      tech: ['Flutter'],
+      desc: 'Application desktop de gestion de parc informatique avec système de permissions et suivi en temps réel du matériel.', 
+      tech: ['Flutter Desktop', 'SQLite', 'Provider'],
       liveUrl: '#',
       codeUrl: '#'
     }
   ];
 
-  const filtered = filter === 'all' ? projects : projects.filter(p => p.type === filter);
+  const filtered = projects.filter(p => p.type === filter);
+
+  const filterCategories = [
+    { 
+      key: 'web', 
+      label: 'Web', 
+      icon: Globe,
+      count: projects.filter(p => p.type === 'web').length,
+      gradient: 'from-red-500 to-rose-600',
+      bgGradient: 'from-red-500/10 to-rose-600/10'
+    },
+    { 
+      key: 'mobile', 
+      label: 'Mobile', 
+      icon: Smartphone,
+      count: projects.filter(p => p.type === 'mobile').length,
+      gradient: 'from-blue-500 to-indigo-600',
+      bgGradient: 'from-blue-500/10 to-indigo-600/10'
+    },
+    { 
+      key: 'desktop', 
+      label: 'Desktop', 
+      icon: Monitor,
+      count: projects.filter(p => p.type === 'desktop').length,
+      gradient: 'from-purple-500 to-violet-600',
+      bgGradient: 'from-purple-500/10 to-violet-600/10'
+    }
+  ];
 
   const Logo = ({ seed }: { seed: string }) => {
     const colors = ['#7c3aed', '#06b6d4', '#f97316', '#ef4444'];
@@ -186,45 +211,41 @@ export default function Page() {
 
   const ProjectImage = ({ title, type }: { title: string, type: string }) => (
     <motion.div 
-      className="w-full h-36 rounded-xl overflow-hidden relative group"
+      className="w-full h-40 rounded-xl overflow-hidden relative group"
       whileHover={{ scale: 1.02 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <div className={`w-full h-full bg-gradient-to-r ${
-        type === 'web' ? 'from-purple-600/30 to-cyan-400/30' :
-        type === 'mobile' ? 'from-amber-600/30 to-pink-400/30' :
-        'from-emerald-600/30 to-blue-400/30'
-      } flex items-center justify-center`}>
-        <span className="text-white/70 font-medium">{title}</span>
+      <div className={`w-full h-full bg-gradient-to-br ${
+        type === 'web' ? 'from-purple-600/40 via-pink-500/30 to-cyan-400/40' :
+        type === 'mobile' ? 'from-blue-600/40 via-indigo-500/30 to-purple-400/40' :
+        'from-violet-600/40 via-purple-500/30 to-pink-400/40'
+      } flex items-center justify-center backdrop-blur-sm`}>
+        <div className="text-center p-4">
+          <span className="text-white/90 font-semibold text-lg">{title}</span>
+        </div>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-end p-4">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
         <motion.div
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          className="bg-white/20 backdrop-blur-sm rounded-full p-2"
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          className="flex gap-3"
         >
-          <ExternalLink size={16} className="text-white" />
+          <div className="bg-white/20 backdrop-blur-md rounded-full p-3">
+            <ExternalLink size={18} className="text-white" />
+          </div>
+          <div className="bg-white/20 backdrop-blur-md rounded-full p-3">
+            <Github size={18} className="text-white" />
+          </div>
         </motion.div>
       </div>
     </motion.div>
   );
 
-  const SkillBadge = ({ skill }: { skill: string }) => (
-    <motion.span 
-      className="px-4 py-2 glass rounded-full text-sm relative overflow-hidden group"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <span className="relative z-10">{skill}</span>
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-cyan-400/0 group-hover:from-purple-500/20 group-hover:to-cyan-400/20 transition-all duration-300"></div>
-    </motion.span>
-  );
-
   return (
     <>
-      {/* Styles globaux améliorés */}
+      {/* Styles globaux */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         body {
           background: radial-gradient(circle at 10% 10%, rgba(124,58,237,0.15), transparent 50%),
@@ -260,17 +281,24 @@ export default function Page() {
           background: #020617;
           border-radius: 15px;
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
       `}</style>
 
-      {/* Canvas d'arrière-plan animé */}
+      {/* Canvas de fond animé */}
       <canvas 
         ref={canvasRef} 
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
       />
 
-      {/* Effet de traînée de souris */}
+      {/* Traînée de souris */}
       <motion.div
-        className="fixed w-6 h-6 rounded-full bg-gradient-to-r from-purple-500/20 to-cyan-400/20 pointer-events-none z-50"
+        className="fixed w-6 h-6 rounded-full bg-gradient-to-r from-purple-500/20 to-cyan-400/20 pointer-events-none z-50 blur-sm"
         animate={{
           x: mousePosition.x - 12,
           y: mousePosition.y - 12,
@@ -278,7 +306,7 @@ export default function Page() {
         transition={{ type: "spring", stiffness: 500, damping: 28 }}
       />
 
-      {/* Navigation améliorée */}
+      {/* Navigation */}
       <motion.nav 
         className="fixed top-4 w-full z-50"
         initial={{ y: -100 }}
@@ -308,15 +336,13 @@ export default function Page() {
             </motion.div>
             <div>
               <div className="font-bold text-lg">Yassin Daboussi</div>
-              <div className="text-xs text-white/60 -mt-1">Ingénieur Full-Stack</div>
             </div>
           </motion.div>
 
-          {/* Navigation desktop améliorée */}
+          {/* Navigation desktop */}
           <div className="hidden md:flex items-center gap-2 glass-heavy px-6 py-2 rounded-full">
             {[
               { id: 'home', label: 'Accueil', icon: '⚡' },
-              { id: 'about', label: 'Profil', icon: '👤' },
               { id: 'projects', label: 'Projets', icon: '🧪' },
               { id: 'contact', label: 'Contact', icon: '📡' }
             ].map(i => (
@@ -337,18 +363,17 @@ export default function Page() {
             ))}
           </div>
 
-          {/* Bouton CV amélioré */}
           <motion.a
             href="/data/CV_Daboussi_Yassin.pdf"
-            className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-500 px-5 py-2.5 rounded-full font-semibold"
-            whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.4)" }}
+            className="hidden md:flex items-center gap-2 bg-gradient-to-r from-purple-600 to-cyan-500 px-5 py-2.5 rounded-full font-semibold shadow-lg shadow-purple-500/20"
+            whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -10px rgba(124, 58, 237, 0.5)" }}
             whileTap={{ scale: 0.95 }}
           >
             <Download size={16} />
             CV
           </motion.a>
 
-          {/* Bouton menu mobile */}
+          {/* Menu mobile */}
           <motion.button 
             onClick={() => setMenuOpen(!menuOpen)} 
             className="md:hidden glass p-2 rounded-lg"
@@ -359,7 +384,7 @@ export default function Page() {
           </motion.button>
         </div>
 
-        {/* Menu mobile amélioré */}
+        {/* Menu mobile */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div 
@@ -370,7 +395,7 @@ export default function Page() {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="glass-heavy rounded-2xl p-4 flex flex-col gap-2">
-                {['home', 'about', 'projects', 'contact'].map(id => (
+                {['home', 'projects', 'contact'].map(id => (
                   <motion.button
                     key={id}
                     onClick={() => scrollTo(id)}
@@ -382,7 +407,6 @@ export default function Page() {
                       activeSection === id ? 'bg-cyan-400' : 'bg-white/30'
                     }`} />
                     {id === 'home' ? 'Accueil' : 
-                     id === 'about' ? 'Profil' : 
                      id === 'projects' ? 'Projets' : 'Contact'}
                   </motion.button>
                 ))}
@@ -401,7 +425,7 @@ export default function Page() {
         </AnimatePresence>
       </motion.nav>
 
-      {/* Section Hero améliorée */}
+      {/* Section Hero */}
       <section id="home" className="min-h-screen flex items-center px-6 max-w-6xl mx-auto relative">
         <div className="relative z-10">
           <motion.div
@@ -410,8 +434,8 @@ export default function Page() {
             transition={{ duration: 0.7 }}
             className="flex items-center gap-2 text-sm text-cyan-300 mb-4"
           >
-            <Sparkles size={16} />
-            <span>Ingénieur Full-Stack & Spécialiste UI</span>
+            <Sparkles size={16} className="animate-pulse" />
+            <span>Ingénieur Full-Stack</span>
           </motion.div>
           
           <motion.h1 
@@ -429,8 +453,9 @@ export default function Page() {
             transition={{ delay: 0.2, duration: 0.7 }}
             className="text-xl text-white/70 max-w-2xl mt-6 leading-relaxed"
           >
-            Je crée des <span className="text-cyan-300 font-medium">expériences digitales futuristes</span> avec des technologies de pointe. 
-            Spécialisé dans Symfony, Kotlin et les architectures cloud.
+            <span className="text-cyan-300 font-medium">One-man army</span> · 
+            Toujours prêt à plonger dans de nouveaux défis. 
+            Je livre des projets de A à Z, du concept à la mise en prod.
           </motion.p>
 
           <motion.div 
@@ -441,8 +466,8 @@ export default function Page() {
           >
             <motion.a
               href="/data/CV_Daboussi_Yassin.pdf"
-              className="bg-gradient-to-r from-purple-500 to-cyan-400 px-8 py-4 rounded-full font-semibold flex items-center gap-2"
-              whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(124, 58, 237, 0.4)" }}
+              className="bg-gradient-to-r from-purple-500 to-cyan-400 px-8 py-4 rounded-full font-semibold flex items-center gap-2 shadow-xl shadow-purple-500/30"
+              whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -10px rgba(124, 58, 237, 0.5)" }}
               whileTap={{ scale: 0.95 }}
             >
               <Download size={18} />
@@ -460,169 +485,24 @@ export default function Page() {
             </motion.button>
           </motion.div>
 
-          {/* Défilement de la stack technique */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.7 }}
-            className="mt-12 flex items-center gap-4 overflow-hidden"
+            className="mt-12 flex gap-4 overflow-hidden"
           >
-            <div className="flex space-x-8 animate-marquee whitespace-nowrap">
-              {['Symfony', 'React', 'Node.js', 'Flutter' ,'Kotlin', 'AWS', 'MySQL', 'MongoDB'].map((tech, index) => (
-                <span key={index} className="text-white/40 text-sm font-medium">
+            <div className="flex gap-8 animate-pulse">
+              {['Symfony', 'React', 'Node.js', 'Flutter', 'Kotlin', 'AWS', 'MySQL', 'MongoDB'].map((tech, index) => (
+                <span key={index} className="text-white/40 text-sm font-medium whitespace-nowrap">
                   {tech}
                 </span>
               ))}
             </div>
           </motion.div>
         </div>
-
-        {/* Éléments flottants */}
-        <motion.div 
-          className="absolute top-20 right-10 w-4 h-4 rounded-full bg-cyan-400/30"
-          animate={{ 
-            y: [0, -20, 0],
-            opacity: [0.5, 1, 0.5]
-          }}
-          transition={{ 
-            duration: 3, 
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div 
-          className="absolute bottom-40 left-10 w-6 h-6 rounded-full bg-purple-400/20"
-          animate={{ 
-            y: [0, 30, 0],
-            opacity: [0.3, 0.7, 0.3]
-          }}
-          transition={{ 
-            duration: 4, 
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-        />
       </section>
 
-      {/* Section À propos améliorée */}
-{/* SECTION PROFIL – VERSION FINALE, COMPACTE & ABSOLUMENT MAGNIFIQUE */}
-<section id="about" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
-  <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-    
-    {/* === PHOTO À GAUCHE – Compact & Élégant === */}
-    <motion.div
-      initial={{ opacity: 0, x: -40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="relative"
-    >
-      <div className="relative max-w-xs mx-auto lg:max-w-none lg:mx-0">
-        {/* Bordure gradient très subtile */}
-        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600/30 to-cyan-500/30 rounded-3xl blur-xl opacity-60" />
-        
-        <div className="relative bg-gradient-to-br from-purple-600/20 to-cyan-500/20 p-1 rounded-3xl">
-          <div className="bg-[#020617] rounded-3xl p-1.5">
-            <img
-              src="/images/yassin-photo.jpg"   // ← ta photo ici (idéalement 1:1 ou 4:5)
-              alt="Yassin Daboussi"
-              className="w-full h-96 lg:h-[440px] object-cover rounded-3xl grayscale hover:grayscale-0 transition-all duration-700"
-            />
-          </div>
-        </div>
-
-        {/* Badge discret "Disponible" */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          whileInView={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="absolute -bottom-4 left-1/2 -translate-x-1/2"
-        >
-          <div className="glass px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            Disponible pour projets
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-
-    {/* === TEXTE À DROITE – Compact, puissant, aéré === */}
-    <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      viewport={{ once: true }}
-      className="space-y-7"
-    >
-      {/* Titre principal */}
-      <div>
-        <h2 className="text-4xl lg:text-5xl font-black leading-tight">
-          Yassin <span className="gradient-text">Daboussi</span>
-        </h2>
-        <p className="text-xl lg:text-2xl text-cyan-300 mt-2 font-medium">
-          Ingénieur Full-Stack & Architecte Digital
-        </p>
-      </div>
-
-      {/* Description – 3 lignes max, impact max */}
-      <p className="text-lg text-white/70 leading-relaxed max-w-xl">
-        Je conçois et développe des applications <span className="text-cyan-300 font-semibold">modernes, rapides et évolutives</span> — 
-        du backend critique à l’interface pixel-perfect.
-      </p>
-
-      {/* Stack en une ligne élégante */}
-      <div className="flex flex-wrap gap-3">
-        {['Symfony', 'Kotlin', 'React', 'Next.js', 'Flutter', 'AWS'].map((tech) => (
-          <span
-            key={tech}
-            className="px-4 py-2 glass rounded-full text-sm font-medium border border-white/10"
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      {/* Stats ultra-compactes */}
-      <div className="flex gap-8 pt-4">
-        {[
-          { num: "5+", label: "ans d’expérience" },
-          { num: "30+", label: "projets livrés" },
-          { num: "100%", label: "clients satisfaits" },
-        ].map((stat, i) => (
-          <div key={i} className="text-center">
-            <div className="text-3xl font-bold gradient-text">{stat.num}</div>
-            <div className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* CTA sobres mais puissants */}
-      <div className="flex flex-wrap gap-4 pt-6">
-        <motion.a
-          href="/data/CV_Daboussi_Yassin.pdf"
-          className="bg-gradient-to-r from-purple-600 to-cyan-500 px-7 py-4 rounded-full font-semibold flex items-center gap-2 hover:shadow-xl hover:shadow-purple-500/30 transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Download size={18} />
-          Télécharger CV
-        </motion.a>
-
-        <motion.button
-          onClick={() => scrollTo('contact')}
-          className="glass px-7 py-4 rounded-full font-medium border border-white/20 hover:bg-white/10 transition-all"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Me contacter
-        </motion.button>
-      </div>
-    </motion.div>
-  </div>
-</section>
-
-      {/* Section Projets améliorée */}
+      {/* Section Projets */}
       <section id="projects" className="py-20 max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -634,63 +514,113 @@ export default function Page() {
             <span className="gradient-text">Laboratoire d'Innovation</span>
             <div className="w-12 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
           </h2>
-          <p className="text-white/60 mb-8">Une collection de mes travaux récents et expérimentations</p>
+          <p className="text-white/60 mb-12">Une collection de mes travaux récents et expérimentations</p>
 
-          {/* Boutons de filtre améliorés */}
-          <div className="flex flex-wrap gap-3 mb-8">
-            {[
-              { key: 'all', label: 'Tous les Projets', emoji: '🚀' },
-              { key: 'web', label: 'Applications Web', emoji: '🌐' },
-              { key: 'mobile', label: 'Mobile', emoji: '📱' },
-              { key: 'desktop', label: 'Desktop', emoji: '💻' }
-            ].map(({ key, label, emoji }) => (
-              <motion.button
-                key={key}
-                onClick={() => setFilter(key as any)}
-                className={`px-5 py-3 rounded-full text-sm font-medium flex items-center gap-2 transition-all ${
-                  filter === key 
-                    ? 'bg-gradient-to-r from-purple-500 to-cyan-400 text-white' 
-                    : 'glass hover:bg-white/10'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>{emoji}</span>
-                {label}
-              </motion.button>
-            ))}
+          {/* Filtres avec design inspiré de l'image */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {filterCategories.map((category) => {
+              const IconComponent = category.icon;
+              const isActive = filter === category.key;
+              
+              return (
+                <motion.button
+                  key={category.key}
+                  onClick={() => setFilter(category.key as any)}
+                  className={`relative group overflow-hidden rounded-3xl p-8 transition-all duration-300 ${
+                    isActive 
+                      ? `bg-gradient-to-br ${category.gradient} shadow-2xl` 
+                      : 'glass hover:scale-[1.02]'
+                  }`}
+                  whileHover={{ y: -5 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: category.key === 'web' ? 0 : category.key === 'mobile' ? 0.1 : 0.2 }}
+                >
+                  {/* Background gradient overlay for non-active state */}
+                  {!isActive && (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${category.bgGradient} opacity-50`} />
+                  )}
+                  
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    {/* Icon */}
+                    <motion.div 
+                      className={`mb-4 p-4 rounded-2xl ${
+                        isActive 
+                          ? 'bg-white/20 backdrop-blur-sm' 
+                          : 'bg-white/10'
+                      }`}
+                      animate={isActive ? { scale: [1, 1.1, 1] } : {}}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <IconComponent size={40} className={isActive ? 'text-white' : 'text-white/80'} />
+                    </motion.div>
+                    
+                    {/* Title */}
+                    <h3 className={`text-xl font-bold mb-2 ${
+                      isActive ? 'text-white' : 'text-white/90'
+                    }`}>
+                      {category.label}
+                    </h3>
+                    
+                    {/* Project count badge */}
+                    <motion.div 
+                      className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+                        isActive 
+                          ? 'bg-white/20 backdrop-blur-sm text-white' 
+                          : 'bg-white/10 text-white/70'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      {category.count} Projet{category.count > 1 ? 's' : ''}
+                    </motion.div>
+                  </div>
+                  
+                  {/* Hover effect shine */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ x: '100%' }}
+                    transition={{ duration: 0.6 }}
+                  />
+                </motion.button>
+              );
+            })}
           </div>
 
-          {/* Grille de projets améliorée */}
+          {/* Projects Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="wait">
-              {filtered.map(project => (
+            <AnimatePresence mode="popLayout">
+              {filtered.map((project, index) => (
                 <motion.div
                   key={project.id}
-                  className="glass rounded-2xl overflow-hidden group"
+                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/10"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ y: -8 }}
+                  layout
                 >
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <Logo seed={project.company} />
                       <motion.span 
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          project.type === 'web' ? 'bg-purple-500/20 text-purple-300' :
-                          project.type === 'mobile' ? 'bg-amber-500/20 text-amber-300' :
-                          'bg-emerald-500/20 text-emerald-300'
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          project.type === 'web' ? 'bg-red-500/20 text-red-300 border border-red-500/30' :
+                          project.type === 'mobile' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30' :
+                          'bg-purple-500/20 text-purple-300 border border-purple-500/30'
                         }`}
+                        whileHover={{ scale: 1.1 }}
                       >
                         {project.type === 'web' ? 'Web' : 
                          project.type === 'mobile' ? 'Mobile' : 'Desktop'}
                       </motion.span>
                     </div>
 
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                    <div className="text-white/50 text-sm mb-3">
+                    <h3 className="text-xl font-bold mb-2 text-white">{project.title}</h3>
+                    <div className="text-white/50 text-sm mb-4 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                       {project.company}
                     </div>
 
@@ -702,16 +632,20 @@ export default function Page() {
 
                     <div className="flex flex-wrap gap-2 mb-4">
                       {project.tech.map(tech => (
-                        <span key={tech} className="px-2 py-1 bg-white/10 rounded text-xs">
+                        <motion.span 
+                          key={tech} 
+                          className="px-2 py-1 bg-white/10 rounded-lg text-xs font-medium border border-white/10"
+                          whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
+                        >
                           {tech}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
 
                     <div className="flex gap-3 pt-4 border-t border-white/10">
                       <motion.a 
                         href={project.liveUrl}
-                        className="flex-1 glass text-center py-2 rounded-lg flex items-center justify-center gap-2 text-sm"
+                        className="flex-1 glass text-center py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm font-medium hover:bg-white/10"
                         whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -720,7 +654,7 @@ export default function Page() {
                       </motion.a>
                       <motion.a 
                         href={project.codeUrl}
-                        className="flex-1 glass text-center py-2 rounded-lg flex items-center justify-center gap-2 text-sm"
+                        className="flex-1 glass text-center py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm font-medium hover:bg-white/10"
                         whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -736,7 +670,7 @@ export default function Page() {
         </motion.div>
       </section>
 
-      {/* Section Contact améliorée */}
+      {/* Section Contact */}
       <section id="contact" className="py-20 max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -745,7 +679,7 @@ export default function Page() {
           viewport={{ once: true }}
           className="gradient-border"
         >
-          <div className="p-8 rounded-2xl">
+          <div className="p-8 md:p-12 rounded-2xl">
             <h2 className="text-4xl font-bold mb-2 flex items-center gap-3">
               <span className="gradient-text">Contact</span>
               <div className="w-12 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
@@ -756,16 +690,21 @@ export default function Page() {
 
             <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-xl font-semibold mb-4 text-cyan-300">Me Contacter</h3>
+                <h3 className="text-xl font-semibold mb-6 text-cyan-300 flex items-center gap-2">
+                  <Sparkles size={20} />
+                  Me Contacter
+                </h3>
                 <div className="space-y-4">
                   <motion.a 
                     href="mailto:yassin.daboussi@esprit.tn"
-                    className="flex items-center gap-3 p-3 glass rounded-xl hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-colors group"
                     whileHover={{ x: 5 }}
                   >
-                    <Mail size={20} className="text-purple-400" />
+                    <div className="p-3 rounded-lg bg-purple-500/20 group-hover:bg-purple-500/30 transition-colors">
+                      <Mail size={20} className="text-purple-400" />
+                    </div>
                     <div>
-                      <div className="font-medium">Email</div>
+                      <div className="font-medium text-white">Email</div>
                       <div className="text-white/70 text-sm">yassin.daboussi@esprit.tn</div>
                     </div>
                   </motion.a>
@@ -774,32 +713,61 @@ export default function Page() {
                     href="https://cal.com/yassin-daboussi"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 p-3 glass rounded-xl hover:bg-white/10 transition-colors group"
+                    className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-colors group"
                     whileHover={{ x: 5 }}
                   >
-                    <Calendar size={20} className="text-cyan-400 group-hover:text-cyan-300 transition-colors" />
+                    <div className="p-3 rounded-lg bg-cyan-500/20 group-hover:bg-cyan-500/30 transition-colors">
+                      <Calendar size={20} className="text-cyan-400" />
+                    </div>
                     <div>
-                      <div className="font-medium">Planifier un Rendez-vous</div>
+                      <div className="font-medium text-white">Planifier un Rendez-vous</div>
                       <div className="text-white/70 text-sm">Organiser un appel via Cal.com</div>
                     </div>
                   </motion.a>
                   
-                  <div className="flex items-center gap-3 p-3 glass rounded-xl">
-                    <Phone size={20} className="text-green-400" />
+                  <motion.div 
+                    className="flex items-center gap-4 p-4 glass rounded-xl"
+                    whileHover={{ x: 5 }}
+                  >
+                    <div className="p-3 rounded-lg bg-green-500/20">
+                      <Phone size={20} className="text-green-400" />
+                    </div>
                     <div>
-                      <div className="font-medium">Téléphone</div>
+                      <div className="font-medium text-white">Téléphone</div>
                       <div className="text-white/70 text-sm">+216 29670343</div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <motion.div
+                  className="relative"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <div className="w-48 h-48 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full blur-3xl absolute -inset-8"></div>
+                  <svg width="200" height="200" viewBox="0 0 200 200" className="relative">
+                    <defs>
+                      <linearGradient id="contact-gradient" x1="0" x2="1" y1="0" y2="1">
+                        <stop offset="0" stopColor="#7c3aed" />
+                        <stop offset="1" stopColor="#06b6d4" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="100" cy="100" r="80" fill="url(#contact-gradient)" opacity="0.2" />
+                    <path d="M100 40 L130 70 L170 75 L135 110 L145 150 L100 125 L55 150 L65 110 L30 75 L70 70 Z" 
+                          fill="url(#contact-gradient)" 
+                          className="animate-pulse" />
+                  </svg>
+                </motion.div>
               </div>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* Pied de page amélioré */}
-      <footer className="text-center py-8 relative">
+      {/* Footer */}
+      <footer className="text-center py-12 relative border-t border-white/5">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0 }}
@@ -808,18 +776,54 @@ export default function Page() {
             viewport={{ once: true }}
             className="text-white/50"
           >
-            <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               >
-                <svg width="20" height="20" viewBox="0 0 100 100">
-                  <path d="M50 20 L65 40 L85 45 L68 60 L72 80 L50 70 L28 80 L32 60 L15 45 L35 40 Z" fill="currentColor" />
+                <svg width="24" height="24" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="footer-gradient" x1="0" x2="1">
+                      <stop offset="0" stopColor="#7c3aed" />
+                      <stop offset="1" stopColor="#06b6d4" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M50 20 L65 40 L85 45 L68 60 L72 80 L50 70 L28 80 L32 60 L15 45 L35 40 Z" 
+                        fill="url(#footer-gradient)" />
                 </svg>
               </motion.div>
-              <span>© {new Date().getFullYear()} — Yassin Daboussi</span>
+              <span className="text-white/70 font-medium">© {new Date().getFullYear()} — Yassin Daboussi</span>
             </div>
-            <p className="text-sm">Conçu avec passion en utilisant Next.js & Framer Motion</p>
+            <p className="text-sm mb-6">Conçu avec passion en utilisant Next.js & Framer Motion</p>
+            
+            <div className="flex justify-center gap-6">
+              <motion.a
+                href="https://github.com/yassin-daboussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-3 glass rounded-lg hover:bg-white/10 transition-colors"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Github size={20} className="text-white/70" />
+              </motion.a>
+              <motion.a
+                href="mailto:yassin.daboussi@esprit.tn"
+                className="p-3 glass rounded-lg hover:bg-white/10 transition-colors"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Mail size={20} className="text-white/70" />
+              </motion.a>
+              <motion.a
+                href="tel:+21629670343"
+                className="p-3 glass rounded-lg hover:bg-white/10 transition-colors"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Phone size={20} className="text-white/70" />
+              </motion.a>
+            </div>
           </motion.div>
         </div>
       </footer>
