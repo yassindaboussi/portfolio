@@ -1,26 +1,31 @@
+// app/page.tsx
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, X, Github, ExternalLink, Mail, Download, Sparkles, Globe, 
-  Smartphone, Monitor, Calendar, Phone
+import {
+  Menu, X, Mail, Download, Sparkles, Globe,
+  Smartphone, Monitor, CalendarDays,
+  Phone
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { projects } from '@/data/projects';
 
 export default function Page() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'desktop'>('all');
   const [activeSection, setActiveSection] = useState('home');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Mouse trail
+  // Mouse trail effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Section observer
+  // Section observer for active nav
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -44,14 +49,6 @@ export default function Page() {
     setMenuOpen(false);
   };
 
-  const projects = [
-    { id: 1, title: 'EasyData', company: 'Freelance', type: 'web', desc: 'Solution EPM avec pipeline automatisé et intégration Google Sheets.', tech: ['Node.js', 'React', 'SnowFlake'], live: '#', code: '#' },
-    { id: 2, title: 'Allgo RH', company: 'Allence', type: 'mobile', desc: 'App RH native avec Jetpack Compose, AWS et synchronisation temps réel.', tech: ['Kotlin', 'Jetpack Compose', 'AWS'], live: '#', code: '#' },
-    { id: 3, title: 'Cotakwira', company: 'Freelance', type: 'web', desc: 'Plateforme de gestion d\'équipes sportives avec réservation de terrains et matchs en temps réel.', tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap'], live: '#', code: '#' },
-    { id: 4, title: 'Plateforme Ticketing', company: 'Kleos', type: 'web', desc: 'Système de billetterie avec QR codes et validation instantanée.', tech: ['Symfony', 'Twig', 'TCPDF'], live: '#', code: '#' },
-    { id: 5, title: 'Gestionnaire de Parc', company: 'Prologic', type: 'desktop', desc: 'App desktop de suivi matériel avec permissions avancées.', tech: ['Flutter Desktop', 'SQLite'], live: '#', code: '#' },
-  ];
-
   const filtered = filter === 'all' ? projects : projects.filter(p => p.type === filter);
 
   const filters = [
@@ -65,15 +62,23 @@ export default function Page() {
     <>
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
         body {
           background: #0f0f1a;
           color: #fff;
           font-family: 'Inter', sans-serif;
           overflow-x: hidden;
         }
-        .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        .gradient-text { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .glass { 
+          background: rgba(255,255,255,0.05); 
+          backdrop-filter: blur(12px); 
+          border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .gradient-text { 
+          background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); 
+          -webkit-background-clip: text; 
+          -webkit-text-fill-color: transparent; 
+          background-clip: text; 
+        }
       `}</style>
 
       {/* Mouse trail */}
@@ -83,10 +88,9 @@ export default function Page() {
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       />
 
-      {/* Nav */}
+      {/* Navigation */}
       <motion.nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
         <div className="glass px-6 py-3 rounded-full flex items-center gap-8 backdrop-blur-xl">
-
           <div className="hidden md:flex items-center gap-1">
             {['home', 'profile', 'skills', 'projects', 'contact'].map((id) => (
               <motion.button
@@ -95,7 +99,7 @@ export default function Page() {
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'}`}
                 whileHover={{ scale: 1.05 }}
               >
-                {id === 'home' ? 'Accueil' : 
+                {id === 'home' ? 'Accueil' :
                  id === 'profile' ? 'Profil' :
                  id === 'skills' ? 'Compétences' :
                  id === 'projects' ? 'Projets' : 'Contact'}
@@ -104,11 +108,15 @@ export default function Page() {
           </div>
 
           <motion.a
-            href="/data/CV_Daboussi_Yassin.pdf"
-            className="bg-gradient-to-r from-purple-500 to-cyan-500 px-6 py-2.5 rounded-full font-medium flex items-center gap-2 shadow-lg"
-            whileHover={{ scale: 1.05 }}
+            href="https://cal.com/yassin-daboussi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 shadow-xl hover:shadow-purple-500/50 transition-all"
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <Download size={16} /> CV
+            <CalendarDays size={18} />
+            Prendre RDV
           </motion.a>
 
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
@@ -117,21 +125,37 @@ export default function Page() {
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div className="fixed inset-0 z-40 glass" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div 
+            className="fixed inset-0 z-40 glass" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+          >
             <div className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
               {['home', 'profile', 'skills', 'projects', 'contact'].map(id => (
-                <motion.button key={id} onClick={() => scrollTo(id)} className="hover:text-cyan-400 transition" whileTap={{ scale: 0.9 }}>
-                  {id === 'home' ? 'Accueil' : 
+                <motion.button 
+                  key={id} 
+                  onClick={() => scrollTo(id)} 
+                  className="hover:text-cyan-400 transition" 
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {id === 'home' ? 'Accueil' :
                    id === 'profile' ? 'Profil' :
                    id === 'skills' ? 'Compétences' :
                    id === 'projects' ? 'Projets' : 'Contact'}
                 </motion.button>
               ))}
-              <a href="/data/CV_Daboussi_Yassin.pdf" className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full">
-                Télécharger CV
+              <a
+                href="https://cal.com/yassin-daboussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 px-10 py-5 rounded-full font-bold text-lg flex items-center gap-3 shadow-2xl"
+              >
+                <CalendarDays size={24} />
+                Prendre RDV
               </a>
             </div>
           </motion.div>
@@ -144,7 +168,6 @@ export default function Page() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
             <span className="text-cyan-400 font-medium text-lg">Ingénieur Full-Stack • One-man army</span>
           </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,7 +176,6 @@ export default function Page() {
           >
             Yassin <span className="gradient-text">Daboussi</span>
           </motion.h1>
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -162,7 +184,6 @@ export default function Page() {
           >
             Je transforme des idées en applications performantes, du concept à la production.
           </motion.p>
-
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/data/CV_Daboussi_Yassin.pdf" className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl">
               <Download size={20} /> Télécharger mon CV
@@ -174,7 +195,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Profile Section */}
+      {/* Profile */}
       <section id="profile" className="py-20 px-6 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -190,7 +211,8 @@ export default function Page() {
               Ingénieur Full-Stack passionné, je construis des applications robustes et scalables de A à Z, en web, backend et mobile.
             </p>
             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-              J’adopte une approche “one-man army” : ma passion me pousse à aller au-delà du code, avec le souci du détail et d’une vraie expérience utilisateur.            </p>
+              J’adopte une approche “one-man army” : ma passion me pousse à aller au-delà du code, avec le souci du détail et d’une vraie expérience utilisateur.
+            </p>
             <div className="flex gap-4">
               <div className="text-center">
                 <div className="text-4xl font-bold gradient-text">2+</div>
@@ -206,37 +228,25 @@ export default function Page() {
               </div>
             </div>
           </div>
-
-      <div className="order-1 md:order-2 flex justify-center">
-        <motion.div whileHover={{ scale: 1.05 }} className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl blur-xl opacity-50"></div>
-          <div className="relative p-2 rounded-3xl bg-gradient-to-br from-purple-600/30 to-cyan-600/30 inline-block">
-            <img 
-              src="/images/yassin.jpg"
-              alt="Yassin Daboussi"
-              className="rounded-3xl max-w-full h-auto block"
-            />
+          <div className="order-1 md:order-2 flex justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl blur-xl opacity-50"></div>
+              <div className="relative p-2 rounded-3xl bg-gradient-to-br from-purple-600/30 to-cyan-600/30 inline-block">
+                <img src="/images/yassin.jpg" alt="Yassin Daboussi" className="rounded-3xl max-w-full h-auto block" />
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
-      </div>
-
         </motion.div>
       </section>
 
-      {/* Skills Section */}
+      {/* Skills */}
       <section id="skills" className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-bold mb-4">
             Technos que je <span className="gradient-text">maîtrise</span>
           </h2>
           <p className="text-xl text-gray-400">Full-Stack • Mobile • Cloud</p>
         </motion.div>
-
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
           {[
             { name: 'Symfony', icon: 'symfony' },
@@ -259,20 +269,15 @@ export default function Page() {
               className="group"
             >
               <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20 flex flex-col items-center justify-center gap-3 min-h-32">
-                <img 
-                  src={`/icons/${tech.icon}.svg`}
-                  alt={tech.name}
-                  className="w-16 h-16 object-contain"
-                />
+                <img src={`/icons/${tech.icon}.svg`} alt={tech.name} className="w-16 h-16 object-contain" />
                 <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
               </div>
             </motion.div>
           ))}
         </div>
+      </section>
 
-</section>
-
-      {/* Projects */}
+      {/* Projects - MODIFIÉ POUR NAVIGATION */}
       <section id="projects" className="py-20 px-6 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="text-5xl font-bold text-center mb-4">
@@ -280,7 +285,6 @@ export default function Page() {
           </h2>
           <p className="text-center text-gray-400 mb-12">Des solutions complètes, livrées avec passion</p>
 
-          {/* Filtres compacts */}
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {filters.map((f) => {
               const Icon = f.icon;
@@ -290,9 +294,7 @@ export default function Page() {
                   key={f.key}
                   onClick={() => setFilter(f.key as any)}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                    active
-                      ? `bg-gradient-to-r ${f.color} text-white shadow-lg`
-                      : 'glass hover:bg-white/10'
+                    active ? `bg-gradient-to-r ${f.color} text-white shadow-lg` : 'glass hover:bg-white/10'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -305,48 +307,38 @@ export default function Page() {
             })}
           </div>
 
-          {/* Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {filtered.map((project, i) => (
                 <motion.article
                   key={project.id}
                   layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05 }}
-                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
-                  whileHover={{ y: -8 }}
+                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/30 transition-all cursor-pointer"
+                  whileHover={{ y: -12 }}
+                  onClick={() => router.push(`/projects/${project.id}`)}
                 >
-                  <div className="h-48 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
-                    <div className="text-5xl font-bold text-white/30">{project.title[0]}</div>
+                  <div className="h-48 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center relative overflow-hidden">
+                    <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
                   </div>
-
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="text-xl font-bold">{project.title}</h3>
-                      <span className="text-xs px-2 py-1 bg-white/10 rounded-full">{project.type}</span>
+                      <span className="text-xs px-3 py-1 bg-white/10 rounded-full capitalize">{project.type}</span>
                     </div>
                     <p className="text-sm text-gray-400 mb-2">chez {project.company}</p>
-                    <p className="text-gray-300 text-sm mb-6 line-clamp-3">{project.desc}</p>
-
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <p className="text-gray-300 text-sm mb-6 line-clamp-2">{project.desc}</p>
+                    <div className="flex flex-wrap gap-2">
                       {project.tech.slice(0, 3).map(t => (
                         <span key={t} className="text-xs px-3 py-1 bg-white/5 rounded-full border border-white/10">
                           {t}
                         </span>
                       ))}
                       {project.tech.length > 3 && <span className="text-xs text-gray-500">+{project.tech.length - 3}</span>}
-                    </div>
-
-                    <div className="flex gap-3">
-                      <a href={project.live} className="flex-1 glass text-center py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
-                        <ExternalLink size={14} /> Live
-                      </a>
-                      <a href={project.code} className="flex-1 glass text-center py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
-                        <Github size={14} /> Code
-                      </a>
                     </div>
                   </div>
                 </motion.article>
@@ -365,19 +357,13 @@ export default function Page() {
           <p className="text-xl text-gray-400 mb-12">
             Disponible pour des missions freelance ou un poste en CDI.
           </p>
-
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             <a href="mailto:yassin.daboussi@esprit.tn" className="glass p-8 rounded-2xl hover:bg-white/10 transition">
               <Mail className="mx-auto mb-4 text-purple-400" size={32} />
               <p className="font-medium">yassin.daboussi@esprit.tn</p>
             </a>
-            <a
-              href="https://cal.com/yassin-daboussi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass p-8 rounded-2xl hover:bg-white/10 transition"
-            >
-              <Calendar className="mx-auto mb-4 text-cyan-400" size={32} />
+            <a href="https://cal.com/yassin-daboussi" target="_blank" rel="noopener noreferrer" className="glass p-8 rounded-2xl hover:bg-white/10 transition">
+              <CalendarDays className="mx-auto mb-4 text-cyan-400" size={32} />
               <p className="font-medium">Réserver un call</p>
             </a>
             <div className="glass p-8 rounded-2xl">
@@ -385,7 +371,6 @@ export default function Page() {
               <p className="font-medium">+216 29 670 343</p>
             </div>
           </div>
-
           <a href="/data/CV_Daboussi_Yassin.pdf" className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl">
             <Download /> Télécharger mon CV
           </a>
