@@ -4,8 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, Github, ExternalLink, Mail, Download, Sparkles, Globe, 
-  Smartphone, Monitor, Calendar, Phone, Code2, Database, Server, 
-  Palette, Terminal, Cpu, Cloud, GitBranch, Zap 
+  Smartphone, Monitor, Calendar, Phone
 } from 'lucide-react';
 
 export default function Page() {
@@ -60,18 +59,6 @@ export default function Page() {
     { key: 'web', label: 'Web', icon: Globe, color: 'from-violet-500 to-purple-600' },
     { key: 'mobile', label: 'Mobile', icon: Smartphone, color: 'from-blue-500 to-cyan-500' },
     { key: 'desktop', label: 'Desktop', icon: Monitor, color: 'from-indigo-500 to-purple-600' },
-  ];
-
-  // Compétences
-  const skills = [
-    { name: 'React / Next.js', level: 95, icon: Code2 },
-    { name: 'Node.js / Express', level: 90, icon: Server },
-    { name: 'Symfony / PHP', level: 88, icon: Terminal },
-    { name: 'Kotlin / Jetpack Compose', level: 85, icon: Smartphone },
-    { name: 'Flutter', level: 82, icon: Cpu },
-    { name: 'PostgreSQL / MySQL', level: 90, icon: Database },
-    { name: 'AWS / Docker', level: 80, icon: Cloud },
-    { name: 'Git / CI-CD', level: 92, icon: GitBranch },
   ];
 
   return (
@@ -256,22 +243,17 @@ export default function Page() {
 
   <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
     {[
-      { name: 'React', icon: 'react' },
-      { name: 'Next.js', icon: 'nextjs' },
-      { name: 'TypeScript', icon: 'typescript' },
-      { name: 'Node.js', icon: 'nodejs' },
       { name: 'Symfony', icon: 'symfony' },
-      { name: 'PHP', icon: 'php' },
+      { name: 'React', icon: 'react' },
+      { name: 'Node.js', icon: 'nodejs' },
       { name: 'Kotlin', icon: 'kotlin' },
       { name: 'Flutter', icon: 'flutter' },
-      { name: 'PostgreSQL', icon: 'postgresql' },
+      { name: 'MySQL', icon: 'mysql' },
       { name: 'MongoDB', icon: 'mongodb' },
+      { name: 'SnowFlake', icon: 'snowflake' },
       { name: 'AWS', icon: 'aws' },
-      { name: 'Docker', icon: 'docker' },
-      { name: 'Git', icon: 'git' },
-      { name: 'Tailwind', icon: 'tailwind' },
-      { name: 'Figma', icon: 'figma' },
-    ].map((tech, i) => (
+      { name: 'Docker', icon: 'docker' }
+        ].map((tech, i) => (
       <motion.div
         key={tech.name}
         initial={{ opacity: 0, y: 20 }}
