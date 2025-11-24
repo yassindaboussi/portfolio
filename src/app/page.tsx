@@ -252,7 +252,7 @@ export default function Page() {
     { name: 'MongoDB', icon: 'mongodb' },
     { name: 'SnowFlake', icon: 'snowflake' },
     { name: 'AWS', icon: 'aws' },
-    { name: 'Docker', icon: 'docker' }
+    { name: 'GIT', icon: 'git' }
   ].map((tech, i) => (
     <motion.div
       key={tech.name}
