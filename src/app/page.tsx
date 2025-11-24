@@ -45,9 +45,9 @@ export default function Page() {
   };
 
   const projects = [
-    { id: 1, title: 'Cotakwira', company: 'Freelance', type: 'web', desc: 'Plateforme de gestion d\'équipes sportives avec réservation de terrains et matchs en temps réel.', tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap'], live: '#', code: '#' },
+    { id: 1, title: 'EasyData', company: 'Freelance', type: 'web', desc: 'Solution EPM avec pipeline automatisé et intégration Google Sheets.', tech: ['Node.js', 'React', 'SnowFlake'], live: '#', code: '#' },
     { id: 2, title: 'Allgo RH', company: 'Allence', type: 'mobile', desc: 'App RH native avec Jetpack Compose, AWS et synchronisation temps réel.', tech: ['Kotlin', 'Jetpack Compose', 'AWS'], live: '#', code: '#' },
-    { id: 3, title: 'EasyData', company: 'Freelance', type: 'web', desc: 'Solution EPM avec pipeline automatisé et intégration Google Sheets.', tech: ['Node.js', 'React', 'PostgreSQL'], live: '#', code: '#' },
+    { id: 3, title: 'Cotakwira', company: 'Freelance', type: 'web', desc: 'Plateforme de gestion d\'équipes sportives avec réservation de terrains et matchs en temps réel.', tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap'], live: '#', code: '#' },
     { id: 4, title: 'Plateforme Ticketing', company: 'Kleos', type: 'web', desc: 'Système de billetterie avec QR codes et validation instantanée.', tech: ['Symfony', 'Twig', 'TCPDF'], live: '#', code: '#' },
     { id: 5, title: 'Gestionnaire de Parc', company: 'Prologic', type: 'desktop', desc: 'App desktop de suivi matériel avec permissions avancées.', tech: ['Flutter Desktop', 'SQLite'], live: '#', code: '#' },
   ];
@@ -187,14 +187,10 @@ export default function Page() {
               À propos de <span className="gradient-text">moi</span>
             </h2>
             <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-              Ingénieur Full-Stack passionné, je construis des applications robustes et scalables de A à Z. 
-              Que ce soit du web moderne avec React/Next.js, du backend performant avec Symfony ou Node.js, 
-              ou des apps mobiles natives (Kotlin, Flutter), j’adore relever des défis techniques complexes.
+              Ingénieur Full-Stack passionné, je construis des applications robustes et scalables de A à Z, en web, backend et mobile.
             </p>
             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-              J’ai une approche "one-man army" : je maîtrise tout le cycle de vie d’un produit – 
-              du design à la mise en production, en passant par l’architecture, le DevOps et le déploiement continu.
-            </p>
+              J’adopte une approche “one-man army” : ma passion me pousse à aller au-delà du code, avec le souci du détail et d’une vraie expérience utilisateur.            </p>
             <div className="flex gap-4">
               <div className="text-center">
                 <div className="text-4xl font-bold gradient-text">2+</div>
