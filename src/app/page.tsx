@@ -430,7 +430,7 @@ export default function Page() {
             className="text-xl text-white/70 max-w-2xl mt-6 leading-relaxed"
           >
             Je crée des <span className="text-cyan-300 font-medium">expériences digitales futuristes</span> avec des technologies de pointe. 
-            Spécialisé dans Next.js, Symfony, Kotlin et les architectures cloud.
+            Spécialisé dans Symfony, Kotlin et les architectures cloud.
           </motion.p>
 
           <motion.div 
@@ -506,56 +506,121 @@ export default function Page() {
       </section>
 
       {/* Section À propos améliorée */}
-      <section id="about" className="py-20 max-w-6xl mx-auto px-6 relative">
+{/* SECTION PROFIL – VERSION FINALE, COMPACTE & ABSOLUMENT MAGNIFIQUE */}
+<section id="about" className="py-24 lg:py-32 max-w-7xl mx-auto px-6">
+  <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    
+    {/* === PHOTO À GAUCHE – Compact & Élégant === */}
+    <motion.div
+      initial={{ opacity: 0, x: -40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="relative"
+    >
+      <div className="relative max-w-xs mx-auto lg:max-w-none lg:mx-0">
+        {/* Bordure gradient très subtile */}
+        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600/30 to-cyan-500/30 rounded-3xl blur-xl opacity-60" />
+        
+        <div className="relative bg-gradient-to-br from-purple-600/20 to-cyan-500/20 p-1 rounded-3xl">
+          <div className="bg-[#020617] rounded-3xl p-1.5">
+            <img
+              src="/images/yassin-photo.jpg"   // ← ta photo ici (idéalement 1:1 ou 4:5)
+              alt="Yassin Daboussi"
+              className="w-full h-96 lg:h-[440px] object-cover rounded-3xl grayscale hover:grayscale-0 transition-all duration-700"
+            />
+          </div>
+        </div>
+
+        {/* Badge discret "Disponible" */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="absolute -bottom-4 left-1/2 -translate-x-1/2"
         >
-          <h2 className="text-4xl font-bold mb-6 flex items-center gap-3">
-            <span className="gradient-text">Profil</span>
-            <div className="w-12 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-400"></div>
-          </h2>
-          
-          <div className="gradient-border">
-            <div className="p-8">
-              <p className="text-white/80 leading-relaxed text-lg">
-                Ingénieur Full-Stack avec une expertise dans le développement d'applications web évolutives, 
-                d'applications mobiles natives et de systèmes backend robustes. Passionné par la création 
-                d'expériences utilisateur intuitives et la mise en œuvre de technologies de pointe.
-              </p>
-
-              <div className="mt-8 grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 text-cyan-300">Maîtrise Frontend</h3>
-                  <p className="text-white/70">
-                    Création d'interfaces réactives et performantes avec React, Next.js et CSS moderne. 
-                    Accent sur l'accessibilité, les animations fluides et l'expérience utilisateur optimale.
-                  </p>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold mb-4 text-purple-300">Excellence Backend</h3>
-                  <p className="text-white/70">
-                    Développement d'API sécurisées et évolutives avec Symfony, Node.js et services cloud. 
-                    Expertise en conception de bases de données, authentification et architecture système.
-                  </p>
-                </div>
-              </div>
-
-              <h3 className="text-2xl font-semibold mt-12 mb-6">Compétences Techniques</h3>
-              <div className="flex flex-wrap gap-3">
-                {[
-                   'Symfony', 'React', 'Node.js', 'Flutter', 'Kotlin', 'MySQL', 'MongoDB', 'AWS Cognito', 'S3', 'CI/CD'
-                ].map(skill => (
-                  <SkillBadge key={skill} skill={skill} />
-                ))}
-              </div>
-            </div>
+          <div className="glass px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+            Disponible pour projets
           </div>
         </motion.div>
-      </section>
+      </div>
+    </motion.div>
+
+    {/* === TEXTE À DROITE – Compact, puissant, aéré === */}
+    <motion.div
+      initial={{ opacity: 0, x: 40 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8 }}
+      viewport={{ once: true }}
+      className="space-y-7"
+    >
+      {/* Titre principal */}
+      <div>
+        <h2 className="text-4xl lg:text-5xl font-black leading-tight">
+          Yassin <span className="gradient-text">Daboussi</span>
+        </h2>
+        <p className="text-xl lg:text-2xl text-cyan-300 mt-2 font-medium">
+          Ingénieur Full-Stack & Architecte Digital
+        </p>
+      </div>
+
+      {/* Description – 3 lignes max, impact max */}
+      <p className="text-lg text-white/70 leading-relaxed max-w-xl">
+        Je conçois et développe des applications <span className="text-cyan-300 font-semibold">modernes, rapides et évolutives</span> — 
+        du backend critique à l’interface pixel-perfect.
+      </p>
+
+      {/* Stack en une ligne élégante */}
+      <div className="flex flex-wrap gap-3">
+        {['Symfony', 'Kotlin', 'React', 'Next.js', 'Flutter', 'AWS'].map((tech) => (
+          <span
+            key={tech}
+            className="px-4 py-2 glass rounded-full text-sm font-medium border border-white/10"
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      {/* Stats ultra-compactes */}
+      <div className="flex gap-8 pt-4">
+        {[
+          { num: "5+", label: "ans d’expérience" },
+          { num: "30+", label: "projets livrés" },
+          { num: "100%", label: "clients satisfaits" },
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <div className="text-3xl font-bold gradient-text">{stat.num}</div>
+            <div className="text-xs text-white/60 uppercase tracking-wider">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA sobres mais puissants */}
+      <div className="flex flex-wrap gap-4 pt-6">
+        <motion.a
+          href="/data/CV_Daboussi_Yassin.pdf"
+          className="bg-gradient-to-r from-purple-600 to-cyan-500 px-7 py-4 rounded-full font-semibold flex items-center gap-2 hover:shadow-xl hover:shadow-purple-500/30 transition-all"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Download size={18} />
+          Télécharger CV
+        </motion.a>
+
+        <motion.button
+          onClick={() => scrollTo('contact')}
+          className="glass px-7 py-4 rounded-full font-medium border border-white/20 hover:bg-white/10 transition-all"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Me contacter
+        </motion.button>
+      </div>
+    </motion.div>
+  </div>
+</section>
 
       {/* Section Projets améliorée */}
       <section id="projects" className="py-20 max-w-6xl mx-auto px-6">
