@@ -468,7 +468,7 @@ export default function Page() {
             className="mt-12 flex items-center gap-4 overflow-hidden"
           >
             <div className="flex space-x-8 animate-marquee whitespace-nowrap">
-              {['Symfony', 'React', 'Node.js', 'Kotlin', 'AWS', 'MySQL', 'MongoDB'].map((tech, index) => (
+              {['Symfony', 'React', 'Node.js', 'Flutter' ,'Kotlin', 'AWS', 'MySQL', 'MongoDB'].map((tech, index) => (
                 <span key={index} className="text-white/40 text-sm font-medium">
                   {tech}
                 </span>
@@ -547,7 +547,7 @@ export default function Page() {
               <h3 className="text-2xl font-semibold mt-12 mb-6">Compétences Techniques</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                   'Symfony', 'React', 'Node.js', 'Kotlin', 'MySQL', 'MongoDB', 'AWS Cognito', 'S3', 'CI/CD'
+                   'Symfony', 'React', 'Node.js', 'Flutter', 'Kotlin', 'MySQL', 'MongoDB', 'AWS Cognito', 'S3', 'CI/CD'
                 ].map(skill => (
                   <SkillBadge key={skill} skill={skill} />
                 ))}
