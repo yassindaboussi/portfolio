@@ -211,19 +211,19 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="order-1 md:order-2 flex justify-center">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl blur-xl opacity-50"></div>
-              <div className="relative w-80 h-80 md:w-96 md:h-96 bg-gradient-to-br from-purple-600/30 to-cyan-600/30 rounded-3xl p-2">
-                <div className="w-full h-full glass rounded-3xl flex items-center justify-center text-9xl font-bold text-white/20">
-                  YD
-                </div>
-              </div>
-            </motion.div>
+      <div className="order-1 md:order-2 flex justify-center">
+        <motion.div whileHover={{ scale: 1.05 }} className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl blur-xl opacity-50"></div>
+          <div className="relative p-2 rounded-3xl bg-gradient-to-br from-purple-600/30 to-cyan-600/30 inline-block">
+            <img 
+              src="/images/yassin.jpg"
+              alt="Yassin Daboussi"
+              className="rounded-3xl max-w-full h-auto block"
+            />
           </div>
+        </motion.div>
+      </div>
+
         </motion.div>
       </section>
 
@@ -238,41 +238,41 @@ export default function Page() {
           <h2 className="text-5xl md:text-6xl font-bold mb-4">
             Technos que je <span className="gradient-text">maîtrise</span>
           </h2>
-          <p className="text-xl text-gray-400">Full-Stack • Mobile • DevOps • Cloud</p>
+          <p className="text-xl text-gray-400">Full-Stack • Mobile • Cloud</p>
         </motion.div>
 
-<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
-  {[
-    { name: 'Symfony', icon: 'symfony' },
-    { name: 'React', icon: 'react' },
-    { name: 'Node.js', icon: 'nodejs' },
-    { name: 'Kotlin', icon: 'kotlin' },
-    { name: 'Flutter', icon: 'flutter' },
-    { name: 'MySQL', icon: 'mysql' },
-    { name: 'MongoDB', icon: 'mongodb' },
-    { name: 'SnowFlake', icon: 'snowflake' },
-    { name: 'AWS', icon: 'aws' },
-    { name: 'GIT', icon: 'git' }
-  ].map((tech, i) => (
-    <motion.div
-      key={tech.name}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: i * 0.05 }}
-      className="group"
-    >
-      <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20 flex flex-col items-center justify-center gap-3 min-h-32">
-        <img 
-          src={`/icons/${tech.icon}.svg`}
-          alt={tech.name}
-          className="w-16 h-16 object-contain"
-        />
-        <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
-      </div>
-    </motion.div>
-  ))}
-</div>
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
+          {[
+            { name: 'Symfony', icon: 'symfony' },
+            { name: 'React', icon: 'react' },
+            { name: 'Node.js', icon: 'nodejs' },
+            { name: 'Kotlin', icon: 'kotlin' },
+            { name: 'Flutter', icon: 'flutter' },
+            { name: 'MySQL', icon: 'mysql' },
+            { name: 'MongoDB', icon: 'mongodb' },
+            { name: 'SnowFlake', icon: 'snowflake' },
+            { name: 'AWS', icon: 'aws' },
+            { name: 'GIT', icon: 'git' }
+          ].map((tech, i) => (
+            <motion.div
+              key={tech.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="group"
+            >
+              <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20 flex flex-col items-center justify-center gap-3 min-h-32">
+                <img 
+                  src={`/icons/${tech.icon}.svg`}
+                  alt={tech.name}
+                  className="w-16 h-16 object-contain"
+                />
+                <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
 </section>
 
