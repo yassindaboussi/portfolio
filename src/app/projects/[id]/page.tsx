@@ -1,15 +1,16 @@
 // app/projects/[id]/page.tsx
 'use client';
-
 import { useParams, useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
-import { motion } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Github, CalendarDays, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, ExternalLink, Github, CalendarDays, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ProjectPage() {
   const router = useRouter();
   const { id } = useParams();
   const project = projects.find(p => p.id === Number(id));
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (!project) {
     return (
@@ -29,6 +30,19 @@ export default function ProjectPage() {
       </div>
     );
   }
+
+  const imageCount = project.imageCount || 1;
+  const images = Array.from({ length: imageCount }, (_, i) => 
+    `/project/${project.type}/${project.id}/${i + 1}.jpg`
+  );
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   return (
     <>
@@ -65,32 +79,94 @@ export default function ProjectPage() {
             <div className="grid lg:grid-cols-3 gap-12">
               {/* Main Content - 2/3 */}
               <div className="lg:col-span-2 space-y-10">
-                {/* Hero */}
+                {/* Hero with Image Gallery */}
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="glass rounded-2xl overflow-hidden"
                 >
-                  <div className="h-64 bg-gradient-to-br from-purple-900/30 via-pink-900/20 to-cyan-900/30 relative overflow-hidden flex items-center justify-center">
-                    <motion.div
-                      className="text-9xl font-black opacity-10"
-                      animate={{ y: [0, -15, 0] }}
-                      transition={{ repeat: Infinity, duration: 10 }}
-                    >
-                      {project.title[0]}
-                    </motion.div>
+                  {/* Image Gallery */}
+                  <div className="relative h-80 bg-black overflow-hidden group">
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={currentImageIndex}
+                        src={images[currentImageIndex]}
+                        alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                        className="w-full h-full object-cover"
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -100 }}
+                        transition={{ duration: 0.3 }}
+                        onError={(e) => {
+                          // Fallback to gradient if image doesn't exist
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </AnimatePresence>
+
+                    {/* Navigation Arrows - Only show if multiple images */}
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          onClick={prevImage}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition opacity-0 group-hover:opacity-100"
+                        >
+                          <ChevronLeft size={24} />
+                        </button>
+                        <button
+                          onClick={nextImage}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition opacity-0 group-hover:opacity-100"
+                        >
+                          <ChevronRight size={24} />
+                        </button>
+
+                        {/* Image Counter */}
+                        <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
+                          {currentImageIndex + 1} / {images.length}
+                        </div>
+                      </>
+                    )}
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                   </div>
 
+                  {/* Thumbnail Navigation - Only show if multiple images */}
+                  {images.length > 1 && (
+                    <div className="p-4 bg-black/20 flex gap-2 overflow-x-auto">
+                      {images.map((img, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentImageIndex(idx)}
+                          className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition ${
+                            currentImageIndex === idx 
+                              ? 'border-purple-500 scale-105' 
+                              : 'border-white/20 hover:border-white/40'
+                          }`}
+                        >
+                          <img
+                            src={img}
+                            alt={`Thumbnail ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Project Info */}
                   <div className="p-8">
                     <div className="flex flex-wrap gap-3 mb-5">
                       <span className="px-4 py-1.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-sm">
-                        {project.company}
+                        {project.company === 'Freelance' ? 'Freelance' : project.company}
                       </span>
                       <span className="px-3 py-1.5 rounded-full bg-white/5 text-xs uppercase tracking-wider">
                         {project.type}
                       </span>
                     </div>
-
                     <h1 className="text-4xl md:text-5xl font-black mb-4 leading-tight">
                       {project.title.split(' ').map((word, i) => (
                         <span key={i}>
@@ -98,7 +174,6 @@ export default function ProjectPage() {
                         </span>
                       ))}
                     </h1>
-
                     <p className="text-lg text-gray-300 leading-relaxed">
                       {project.desc}
                     </p>
@@ -154,7 +229,6 @@ export default function ProjectPage() {
                   className="glass rounded-2xl p-7 space-y-5"
                 >
                   <h3 className="text-lg font-bold">Liens</h3>
-
                   {project.live && project.live !== '#' && (
                     <a href={project.live} target="_blank" rel="noopener noreferrer" className="block">
                       <div className="bg-gradient-to-r from-cyan-500 to-blue-600 p-4 rounded-xl flex items-center justify-between hover:scale-105 transition">
@@ -166,7 +240,6 @@ export default function ProjectPage() {
                       </div>
                     </a>
                   )}
-
                   {project.code && project.code !== '#' && (
                     <a href={project.code} target="_blank" rel="noopener noreferrer" className="block">
                       <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-xl flex items-center justify-between hover:scale-105 transition">
@@ -178,7 +251,6 @@ export default function ProjectPage() {
                       </div>
                     </a>
                   )}
-
                   <a
                     href="https://cal.com/yassin-daboussi"
                     target="_blank"

@@ -11,33 +11,35 @@ export interface Project {
   tech: string[];
   live?: string;
   code?: string;
+  // Number of images available for this project
+  imageCount?: number;
 }
 
 export const projects: Project[] = [
-{
-  id: 1,
-  title: 'EasyData',
-  company: 'Freelance',
-  type: 'web',
-  desc: 'Plateforme BI complète avec workflows métiers, assistant IA conversationnel monétisé, visioconférence Jitsi Meet, intégrations Google Drive & Sheets.',
-  fullDescription: `Solution full‑stack de business intelligence intégrant modélisation des processus, saisie structurée et génération automatique de rapports, enrichie par un chatbot IA (Groq/Llama 3.1). Elle offre workflows collaboratifs, assistant conversationnel monétisé, visioconférence Jitsi et intégration directe de Google Sheets/Drive. L’ensemble repose sur une API REST documentée (Swagger UI) et un stack moderne : React/TypeScript, Node.js/Express, Snowflake, OAuth2 sécurisé.
-  `.trim(),
-  tech: [
-    'React',
-    'TypeScript',
-    'Node.js',
-    'Express',
-    'Snowflake',
-    'Tailwind CSS',
-    'Groq/Llama API',
-    'Google Sheets API',
-    'Google Drive API',
-    'Jitsi Meet',
-    'Swagger'
-  ],
-  live: '#',
-  code: '#',
-},
+  {
+    id: 1,
+    title: 'EasyData',
+    company: 'Freelance',
+    type: 'web',
+    desc: 'Plateforme BI complète avec workflows métiers, assistant IA conversationnel monétisé, visioconférence Jitsi Meet, intégrations Google Drive & Sheets.',
+    fullDescription: `Solution full‑stack de business intelligence intégrant modélisation des processus, saisie structurée et génération automatique de rapports, enrichie par un chatbot IA (Groq/Llama 3.1). Elle offre workflows collaboratifs, assistant conversationnel monétisé, visioconférence Jitsi et intégration directe de Google Sheets/Drive. L'ensemble repose sur une API REST documentée (Swagger UI) et un stack moderne : React/TypeScript, Node.js/Express, Snowflake, OAuth2 sécurisé.`,
+    tech: [
+      'React',
+      'TypeScript',
+      'Node.js',
+      'Express',
+      'Snowflake',
+      'Tailwind CSS',
+      'Groq/Llama API',
+      'Google Sheets API',
+      'Google Drive API',
+      'Jitsi Meet',
+      'Swagger'
+    ],
+    live: '#',
+    code: '#',
+    imageCount: 3,
+  },
   {
     id: 2,
     title: 'Allgo RH',
@@ -49,6 +51,7 @@ export const projects: Project[] = [
     tech: ['Kotlin', 'Jetpack Compose', 'AWS Amplify', 'MongoDb', 'Symfony', 'Coroutines'],
     live: '#',
     code: '#',
+    imageCount: 4,
   },
   {
     id: 3,
@@ -57,10 +60,11 @@ export const projects: Project[] = [
     type: 'web',
     desc: "Plateforme de gestion d'équipes sportives avec réservation de terrains et matchs en temps réel.",
     fullDescription:
-      'Application web full Symfony pour organiser des matchs amateurs. Réservation de terrains, création d’équipes, chat en temps réel, classements automatiques et notifications push.',
+      'Application web full Symfony pour organiser des matchs amateurs. Réservation de terrains, création déquipes, chat en temps réel, classements automatiques et notifications push.',
     tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap', 'WebSocket', 'Mercure'],
     live: '#',
     code: '#',
+    imageCount: 2,
   },
   {
     id: 4,
@@ -73,6 +77,7 @@ export const projects: Project[] = [
     tech: ['Symfony', 'Twig', 'TCPDF', 'MySQL', 'Bootstrap'],
     live: '#',
     code: '#',
+    imageCount: 3,
   },
   {
     id: 5,
@@ -85,5 +90,6 @@ export const projects: Project[] = [
     tech: ['JavaFX', 'Java', 'FXML', 'MySQL'],
     live: '#',
     code: '#',
+    imageCount: 2,
   },
 ];

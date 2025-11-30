@@ -1,12 +1,10 @@
 // app/page.tsx
 'use client';
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Menu, X, Mail, Download, Sparkles, Globe,
-  Smartphone, Monitor, CalendarDays,
-  Phone
+  Smartphone, Monitor, CalendarDays, Phone
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
@@ -35,12 +33,10 @@ export default function Page() {
       },
       { threshold: 0.5 }
     );
-
     ['home', 'profile', 'skills', 'projects', 'contact'].forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
-
     return () => observer.disconnect();
   }, []);
 
@@ -58,6 +54,11 @@ export default function Page() {
     { key: 'desktop', label: 'Desktop', icon: Monitor, color: 'from-indigo-500 to-purple-600' },
   ];
 
+  // Helper function to get project banner image
+  const getProjectBanner = (project: typeof projects[0]) => {
+    return `/project/${project.type}/${project.id}/1.jpg`;
+  };
+
   return (
     <>
       <style jsx global>{`
@@ -68,16 +69,16 @@ export default function Page() {
           font-family: 'Inter', sans-serif;
           overflow-x: hidden;
         }
-        .glass { 
-          background: rgba(255,255,255,0.05); 
-          backdrop-filter: blur(12px); 
-          border: 1px solid rgba(255,255,255,0.1); 
+        .glass {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.1);
         }
-        .gradient-text { 
-          background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); 
-          -webkit-background-clip: text; 
-          -webkit-text-fill-color: transparent; 
-          background-clip: text; 
+        .gradient-text {
+          background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
       `}</style>
 
@@ -106,7 +107,6 @@ export default function Page() {
               </motion.button>
             ))}
           </div>
-
           <motion.a
             href="https://cal.com/yassin-daboussi"
             target="_blank"
@@ -118,7 +118,6 @@ export default function Page() {
             <CalendarDays size={18} />
             Prendre RDV
           </motion.a>
-
           <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
             {menuOpen ? <X /> : <Menu />}
           </button>
@@ -128,18 +127,18 @@ export default function Page() {
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div 
-            className="fixed inset-0 z-40 glass" 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+          <motion.div
+            className="fixed inset-0 z-40 glass"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
               {['home', 'profile', 'skills', 'projects', 'contact'].map(id => (
-                <motion.button 
-                  key={id} 
-                  onClick={() => scrollTo(id)} 
-                  className="hover:text-cyan-400 transition" 
+                <motion.button
+                  key={id}
+                  onClick={() => scrollTo(id)}
+                  className="hover:text-cyan-400 transition"
                   whileTap={{ scale: 0.9 }}
                 >
                   {id === 'home' ? 'Accueil' :
@@ -211,12 +210,12 @@ export default function Page() {
               Ingénieur Full-Stack passionné, je construis des applications robustes et scalables de A à Z, en web, backend et mobile.
             </p>
             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-              J’adopte une approche “one-man army” : ma passion me pousse à aller au-delà du code, avec le souci du détail et d’une vraie expérience utilisateur.
+              J'adopte une approche "one-man army" : ma passion me pousse à aller au-delà du code, avec le souci du détail et d'une vraie expérience utilisateur.
             </p>
             <div className="flex gap-4">
               <div className="text-center">
                 <div className="text-4xl font-bold gradient-text">2+</div>
-                <div className="text-sm text-gray-400">Ans d’expérience</div>
+                <div className="text-sm text-gray-400">Ans d'expérience</div>
               </div>
               <div className="text-center">
                 <div className="text-4xl font-bold gradient-text">30+</div>
@@ -277,14 +276,13 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Projects - MODIFIÉ POUR NAVIGATION */}
+      {/* Projects - WITH IMAGES */}
       <section id="projects" className="py-20 px-6 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="text-5xl font-bold text-center mb-4">
             Mes <span className="gradient-text">Projets</span>
           </h2>
           <p className="text-center text-gray-400 mb-12">Des solutions complètes, livrées avec passion</p>
-
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {filters.map((f) => {
               const Icon = f.icon;
@@ -306,7 +304,6 @@ export default function Page() {
               );
             })}
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {filtered.map((project, i) => (
@@ -321,16 +318,30 @@ export default function Page() {
                   whileHover={{ y: -12 }}
                   onClick={() => router.push(`/projects/${project.id}`)}
                 >
-                  <div className="h-48 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center relative overflow-hidden">
-                    <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                  <div className="h-48 relative overflow-hidden">
+                    <img 
+                      src={getProjectBanner(project)} 
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        // Fallback to gradient if image doesn't exist
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <div className="hidden absolute inset-0 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
+                      <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   </div>
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="text-xl font-bold">{project.title}</h3>
                       <span className="text-xs px-3 py-1 bg-white/10 rounded-full capitalize">{project.type}</span>
                     </div>
-                    <p className="text-sm text-gray-400 mb-2">chez {project.company}</p>
+                    <p className="text-sm text-gray-400 mb-2">
+                      {project.company === 'Freelance' ? 'Freelance' : `chez ${project.company}`}
+                    </p>
                     <p className="text-gray-300 text-sm mb-6 line-clamp-2">{project.desc}</p>
                     <div className="flex flex-wrap gap-2">
                       {project.tech.slice(0, 3).map(t => (
