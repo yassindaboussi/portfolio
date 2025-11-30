@@ -14,18 +14,44 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  {
-    id: 1,
-    title: 'EasyData',
-    company: 'Freelance',
-    type: 'web',
-    desc: 'Solution EPM avec pipeline automatisé et intégration Google Sheets.',
-    fullDescription:
-      'Plateforme complète d’automatisation de données pour PME. Pipeline Node.js qui récupère les données depuis Google Sheets, les nettoie, les stocke dans Snowflake et génère des rapports automatisés. Dashboard React avec graphiques interactifs.',
-    tech: ['Node.js', 'React', 'Snowflake', 'Google Sheets API', 'Recharts'],
-    live: '#',
-    code: '#',
-  },
+{
+  id: 1,
+  title: 'EasyData',
+  company: 'Freelance',
+  type: 'web',
+  desc: 'Plateforme BI complète avec workflows métiers, assistant IA conversationnel monétisé, visioconférence Jitsi Meet, intégrations Google Drive & Sheets.',
+  fullDescription: `
+Solution full-stack de business intelligence permettant la modélisation de processus métiers, 
+la saisie structurée de données, la génération automatique de rapports et l’assistance contextuelle 
+via un chatbot IA (alimenté par l’API Groq/Llama 3.1).
+
+Fonctionnalités clés :
+• Workflows collaboratifs avec pièces jointes et validation multi-étapes
+• Assistant IA conversationnel monétisé (pay-per-prompt)
+• Visioconférence intégrée via Jitsi Meet
+• Synchronisation bidirectionnelle avec Google Drive (documents, pièces jointes)
+• Import/export avancé avec Google Sheets (lecture, écriture et synchronisation automatique des tableaux)
+• API REST complète documentée avec Swagger UI
+
+Stack technique moderne : React + TypeScript, Node.js/Express, Snowflake Data Warehouse, 
+intégrations tierces sécurisées via OAuth2.
+  `.trim(),
+  tech: [
+    'React',
+    'TypeScript',
+    'Node.js',
+    'Express',
+    'Snowflake',
+    'Tailwind CSS',
+    'Groq/Llama API',
+    'Google Sheets API',
+    'Google Drive API',
+    'Jitsi Meet',
+    'Swagger'
+  ],
+  live: '#',
+  code: '#',
+},
   {
     id: 2,
     title: 'Allgo RH',
@@ -34,7 +60,7 @@ export const projects: Project[] = [
     desc: 'App RH native avec Jetpack Compose, AWS et synchronisation temps réel.',
     fullDescription:
       'Application mobile Android pour la gestion RH : pointage GPS, demandes de congés, notes de frais avec scan de tickets, messagerie interne. Fonctionne hors ligne avec synchronisation automatique.',
-    tech: ['Kotlin', 'Jetpack Compose', 'AWS Amplify', 'Firebase', 'Room', 'Coroutines'],
+    tech: ['Kotlin', 'Jetpack Compose', 'AWS Amplify', 'MongoDb', 'Symfony', 'Coroutines'],
     live: '#',
     code: '#',
   },
