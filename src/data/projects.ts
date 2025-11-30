@@ -23,8 +23,8 @@ export const projects: Project[] = [
     fullDescription:
       'Plateforme complète d’automatisation de données pour PME. Pipeline Node.js qui récupère les données depuis Google Sheets, les nettoie, les stocke dans Snowflake et génère des rapports automatisés. Dashboard React avec graphiques interactifs.',
     tech: ['Node.js', 'React', 'Snowflake', 'Google Sheets API', 'Recharts'],
-    live: 'https://easydata.example.com',
-    code: 'https://github.com/yassin-daboussi/easydata',
+    live: '#',
+    code: '#',
   },
   {
     id: 2,
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     fullDescription:
       'Application web full Symfony pour organiser des matchs amateurs. Réservation de terrains, création d’équipes, chat en temps réel, classements automatiques et notifications push.',
     tech: ['Symfony', 'MySQL', 'Twig', 'Bootstrap', 'WebSocket', 'Mercure'],
-    live: 'https://cotakwira.com',
+    live: '#',
     code: '#',
   },
   {
