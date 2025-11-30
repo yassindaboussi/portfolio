@@ -20,21 +20,7 @@ export const projects: Project[] = [
   company: 'Freelance',
   type: 'web',
   desc: 'Plateforme BI complète avec workflows métiers, assistant IA conversationnel monétisé, visioconférence Jitsi Meet, intégrations Google Drive & Sheets.',
-  fullDescription: `
-Solution full-stack de business intelligence permettant la modélisation de processus métiers, 
-la saisie structurée de données, la génération automatique de rapports et l’assistance contextuelle 
-via un chatbot IA (alimenté par l’API Groq/Llama 3.1).
-
-Fonctionnalités clés :
-• Workflows collaboratifs avec pièces jointes et validation multi-étapes
-• Assistant IA conversationnel monétisé (pay-per-prompt)
-• Visioconférence intégrée via Jitsi Meet
-• Synchronisation bidirectionnelle avec Google Drive (documents, pièces jointes)
-• Import/export avancé avec Google Sheets (lecture, écriture et synchronisation automatique des tableaux)
-• API REST complète documentée avec Swagger UI
-
-Stack technique moderne : React + TypeScript, Node.js/Express, Snowflake Data Warehouse, 
-intégrations tierces sécurisées via OAuth2.
+  fullDescription: `Solution full‑stack de business intelligence intégrant modélisation des processus, saisie structurée et génération automatique de rapports, enrichie par un chatbot IA (Groq/Llama 3.1). Elle offre workflows collaboratifs, assistant conversationnel monétisé, visioconférence Jitsi et intégration directe de Google Sheets/Drive. L’ensemble repose sur une API REST documentée (Swagger UI) et un stack moderne : React/TypeScript, Node.js/Express, Snowflake, OAuth2 sécurisé.
   `.trim(),
   tech: [
     'React',
