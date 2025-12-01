@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Github, CalendarDays, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, CalendarDays, Sparkles, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ProjectPage() {
@@ -11,6 +11,7 @@ export default function ProjectPage() {
   const { id } = useParams();
   const project = projects.find(p => p.id === Number(id));
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   if (!project) {
     return (
@@ -42,6 +43,15 @@ export default function ProjectPage() {
 
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index);
+    setIsLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setIsLightboxOpen(false);
   };
 
   return (
@@ -86,13 +96,14 @@ export default function ProjectPage() {
                   className="glass rounded-2xl overflow-hidden"
                 >
                   {/* Image Gallery */}
-                  <div className="relative h-80 bg-black overflow-hidden group">
+                  <div className="relative h-96 bg-black overflow-hidden group cursor-pointer"
+                       onClick={() => openLightbox(currentImageIndex)}>
                     <AnimatePresence mode="wait">
                       <motion.img
                         key={currentImageIndex}
                         src={images[currentImageIndex]}
                         alt={`${project.title} - Image ${currentImageIndex + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain bg-black"
                         initial={{ opacity: 0, x: 100 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -100 }}
@@ -104,17 +115,28 @@ export default function ProjectPage() {
                       />
                     </AnimatePresence>
 
+                    {/* Zoom Icon Hint */}
+                    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
+                      <ZoomIn size={20} />
+                    </div>
+
                     {/* Navigation Arrows - Only show if multiple images */}
                     {images.length > 1 && (
                       <>
                         <button
-                          onClick={prevImage}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevImage();
+                          }}
                           className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition opacity-0 group-hover:opacity-100"
                         >
                           <ChevronLeft size={24} />
                         </button>
                         <button
-                          onClick={nextImage}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextImage();
+                          }}
                           className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 backdrop-blur-sm p-3 rounded-full transition opacity-0 group-hover:opacity-100"
                         >
                           <ChevronRight size={24} />
@@ -137,7 +159,10 @@ export default function ProjectPage() {
                       {images.map((img, idx) => (
                         <button
                           key={idx}
-                          onClick={() => setCurrentImageIndex(idx)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentImageIndex(idx);
+                          }}
                           className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition ${
                             currentImageIndex === idx 
                               ? 'border-purple-500 scale-105' 
@@ -268,6 +293,115 @@ export default function ProjectPage() {
             </div>
           </div>
         </div>
+
+        {/* Lightbox Modal */}
+        <AnimatePresence>
+          {isLightboxOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center"
+              onClick={closeLightbox}
+            >
+              {/* Close Button */}
+              <motion.button
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                onClick={closeLightbox}
+                className="fixed top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-sm p-3 rounded-full transition z-[101]"
+              >
+                <X size={24} />
+              </motion.button>
+
+              {/* Image Counter */}
+              {images.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="fixed top-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm px-6 py-3 rounded-full text-lg font-medium z-[101]"
+                >
+                  {currentImageIndex + 1} / {images.length}
+                </motion.div>
+              )}
+
+              {/* Main Image */}
+              <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentImageIndex}
+                    src={images[currentImageIndex]}
+                    alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                    className="max-w-full max-h-full object-contain"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3 }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </AnimatePresence>
+
+                {/* Navigation Arrows */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm p-4 rounded-full transition z-[101]"
+                    >
+                      <ChevronLeft size={32} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-sm p-4 rounded-full transition z-[101]"
+                    >
+                      <ChevronRight size={32} />
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Thumbnail Navigation */}
+              {images.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-4 bg-black/60 backdrop-blur-sm rounded-2xl max-w-[90vw] overflow-x-auto z-[101]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {images.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCurrentImageIndex(idx);
+                      }}
+                      className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition ${
+                        currentImageIndex === idx
+                          ? 'border-purple-500 scale-110'
+                          : 'border-white/30 hover:border-white/60'
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
