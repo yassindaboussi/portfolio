@@ -205,12 +205,16 @@ export default function Page() {
             transition={{ delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <a
-              href="/data/CV_Daboussi_Yassin.pdf"
-              className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl"
-            >
-              <Download size={20} /> Télécharger mon CV
-            </a>
+          <motion.a
+            href="/data/CV_Daboussi_Yassin.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl hover:shadow-cyan-500/50 transition-all"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Download size={20} /> Télécharger mon CV
+          </motion.a>
             <button onClick={() => scrollTo('projects')} className="glass px-8 py-4 rounded-full font-medium">
               Voir mes projets
             </button>
@@ -416,12 +420,14 @@ export default function Page() {
               <p className="font-medium">+216 29 670 343</p>
             </div>
           </div>
-          <a
-            href="/data/CV_Daboussi_Yassin.pdf"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl"
-          >
-            <Download /> Télécharger mon CV
-          </a>
+        <a
+          href="/data/CV_Daboussi_Yassin.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl hover:shadow-cyan-500/50 transition-all"
+        >
+          <Download /> Télécharger mon CV
+        </a>
         </motion.div>
       </section>
 

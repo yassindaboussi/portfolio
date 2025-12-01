@@ -36,7 +36,7 @@ export default function RootLayout({
         <script
           defer
           src="https://cloud.umami.is/script.js"
-          data-website-id="b1d8aeaa-2b98-4776-9069-4295d621fd1c"
+          data-website-id="01c6be30-6922-4c07-8d87-64236b89cfa9"
         ></script>
 
         {/* Optionnel : si tu veux voir les IPs exactes (sinon elles sont masquées) */}
