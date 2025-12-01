@@ -1,15 +1,26 @@
-// app/projects/[id]/page.tsx
+// app/projects/[slug]/page.tsx
 'use client';
+
 import { useParams, useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ExternalLink, Github, CalendarDays, Sparkles, ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
+import {
+  ArrowLeft,
+  ExternalLink,
+  Github,
+  CalendarDays,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ZoomIn,
+} from 'lucide-react';
 import { useState } from 'react';
 
 export default function ProjectPage() {
   const router = useRouter();
-  const { id } = useParams();
-  const project = projects.find(p => p.id === Number(id));
+  const { slug } = useParams();
+  const project = projects.find((p) => p.slug === slug);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
@@ -34,7 +45,7 @@ export default function ProjectPage() {
 
   const imageCount = project.imageCount || 1;
   const images = Array.from({ length: imageCount }, (_, i) => 
-    `/project/${project.type}/${project.id}/${i + 1}.jpg`
+    `/project/${project.type}/${project.slug}/${i + 1}.jpg`
   );
 
   const nextImage = () => {
@@ -50,9 +61,7 @@ export default function ProjectPage() {
     setIsLightboxOpen(true);
   };
 
-  const closeLightbox = () => {
-    setIsLightboxOpen(false);
-  };
+  const closeLightbox = () => setIsLightboxOpen(false);
 
   return (
     <>
@@ -87,17 +96,18 @@ export default function ProjectPage() {
         <div className="pt-24 pb-20 px-6">
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-3 gap-12">
-              {/* Main Content - 2/3 */}
+              {/* Main Content */}
               <div className="lg:col-span-2 space-y-10">
-                {/* Hero with Image Gallery */}
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="glass rounded-2xl overflow-hidden"
                 >
                   {/* Image Gallery */}
-                  <div className="relative h-96 bg-black overflow-hidden group cursor-pointer"
-                       onClick={() => openLightbox(currentImageIndex)}>
+                  <div
+                    className="relative h-96 bg-black overflow-hidden group cursor-pointer"
+                    onClick={() => openLightbox(currentImageIndex)}
+                  >
                     <AnimatePresence mode="wait">
                       <motion.img
                         key={currentImageIndex}
@@ -109,18 +119,15 @@ export default function ProjectPage() {
                         exit={{ opacity: 0, x: -100 }}
                         transition={{ duration: 0.3 }}
                         onError={(e) => {
-                          // Fallback to gradient if image doesn't exist
                           e.currentTarget.style.display = 'none';
                         }}
                       />
                     </AnimatePresence>
 
-                    {/* Zoom Icon Hint */}
                     <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition">
                       <ZoomIn size={20} />
                     </div>
 
-                    {/* Navigation Arrows - Only show if multiple images */}
                     {images.length > 1 && (
                       <>
                         <button
@@ -142,18 +149,16 @@ export default function ProjectPage() {
                           <ChevronRight size={24} />
                         </button>
 
-                        {/* Image Counter */}
                         <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
                           {currentImageIndex + 1} / {images.length}
                         </div>
                       </>
                     )}
 
-                    {/* Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  {/* Thumbnail Navigation - Only show if multiple images */}
+                  {/* Thumbnails */}
                   {images.length > 1 && (
                     <div className="p-4 bg-black/20 flex gap-2 overflow-x-auto">
                       {images.map((img, idx) => (
@@ -164,8 +169,8 @@ export default function ProjectPage() {
                             setCurrentImageIndex(idx);
                           }}
                           className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition ${
-                            currentImageIndex === idx 
-                              ? 'border-purple-500 scale-105' 
+                            currentImageIndex === idx
+                              ? 'border-purple-500 scale-105'
                               : 'border-white/20 hover:border-white/40'
                           }`}
                         >
@@ -199,13 +204,11 @@ export default function ProjectPage() {
                         </span>
                       ))}
                     </h1>
-                    <p className="text-lg text-gray-300 leading-relaxed">
-                      {project.desc}
-                    </p>
+                    <p className="text-lg text-gray-300 leading-relaxed">{project.desc}</p>
                   </div>
                 </motion.div>
 
-                {/* Description */}
+                {/* Full description */}
                 {(project.fullDescription || project.desc) && (
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -221,7 +224,7 @@ export default function ProjectPage() {
                 )}
               </div>
 
-              {/* Sidebar - 1/3 */}
+              {/* Sidebar */}
               <div className="space-y-8">
                 {/* Tech Stack */}
                 <motion.div
@@ -294,7 +297,7 @@ export default function ProjectPage() {
           </div>
         </div>
 
-        {/* Lightbox Modal */}
+        {/* Lightbox */}
         <AnimatePresence>
           {isLightboxOpen && (
             <motion.div
@@ -304,30 +307,21 @@ export default function ProjectPage() {
               className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center"
               onClick={closeLightbox}
             >
-              {/* Close Button */}
               <motion.button
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
                 onClick={closeLightbox}
                 className="fixed top-6 right-6 bg-white/10 hover:bg-white/20 backdrop-blur-sm p-3 rounded-full transition z-[101]"
               >
                 <X size={24} />
               </motion.button>
 
-              {/* Image Counter */}
               {images.length > 1 && (
                 <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
                   className="fixed top-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm px-6 py-3 rounded-full text-lg font-medium z-[101]"
                 >
                   {currentImageIndex + 1} / {images.length}
                 </motion.div>
               )}
 
-              {/* Main Image */}
               <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12">
                 <AnimatePresence mode="wait">
                   <motion.img
@@ -343,7 +337,6 @@ export default function ProjectPage() {
                   />
                 </AnimatePresence>
 
-                {/* Navigation Arrows */}
                 {images.length > 1 && (
                   <>
                     <button
@@ -368,33 +361,22 @@ export default function ProjectPage() {
                 )}
               </div>
 
-              {/* Thumbnail Navigation */}
               {images.length > 1 && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
                   className="fixed bottom-6 left-1/2 -translate-x-1/2 flex gap-3 p-4 bg-black/60 backdrop-blur-sm rounded-2xl max-w-[90vw] overflow-x-auto z-[101]"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {images.map((img, idx) => (
                     <button
                       key={idx}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCurrentImageIndex(idx);
-                      }}
+                      onClick={() => setCurrentImageIndex(idx)}
                       className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition ${
                         currentImageIndex === idx
                           ? 'border-purple-500 scale-110'
                           : 'border-white/30 hover:border-white/60'
                       }`}
                     >
-                      <img
-                        src={img}
-                        alt={`Thumbnail ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </motion.div>

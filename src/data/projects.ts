@@ -4,6 +4,7 @@ export type ProjectType = 'web' | 'mobile' | 'desktop';
 
 export interface Project {
   id: number;
+  slug: string;                    // <-- NEW: used for folder name and URL
   title: string;
   company: string;
   type: ProjectType;
@@ -12,13 +13,34 @@ export interface Project {
   tech: string[];
   live?: string;
   code?: string;
-  /** Nombre d'images disponibles pour ce projet */
   imageCount?: number;
 }
 
 export const projects: Project[] = [
   {
     id: 1,
+    slug: 'arabilex',
+    title: 'ArabiLex',
+    company: 'Open Source',
+    type: 'web',
+    desc: 'Moteur de recherche arabe avancé — recherche par début, fin, inclusion ou permutation de lettres.',
+    fullDescription:
+      "ArabiLex est un moteur de recherche dédié à la langue arabe, conçu pour permettre des recherches lexicale et morphologique flexibles : recherche par préfixe, suffixe, inclusion (contains) et permutations d'ordres de lettres. Le projet met l'accent sur la normalisation de l'arabe (gestion des diacritiques, hamza, ta marbuta, alef variations), une interface RTL conviviale et des algorithmes de recherche optimisés côté client/serveur selon l'implémentation. Idéal pour linguistes, enseignants, étudiants et développeurs travaillant sur le traitement du texte arabe ou des dictionnaires interactifs.",
+    tech: [
+      'Python',
+      'JavaScript',
+      'HTML',
+      'CSS',
+      'Arabic normalization',
+      'RTL UI',
+    ],
+    live: 'https://arabilex.netlify.app/',
+    code: 'https://github.com/yassindaboussi/ArabiLex',
+    imageCount: 3,
+  },
+  {
+    id: 2,
+    slug: 'easydata',
     title: 'EasyData',
     company: 'Freelance',
     type: 'web',
@@ -43,7 +65,8 @@ export const projects: Project[] = [
     imageCount: 3,
   },
   {
-    id: 2,
+    id: 3,
+    slug: 'allgo',
     title: 'Allgo RH',
     company: 'Allence',
     type: 'mobile',
@@ -73,7 +96,8 @@ export const projects: Project[] = [
     imageCount: 4,
   },
   {
-    id: 3,
+    id: 4,
+    slug: 'cotakwira',
     title: 'Cotakwira',
     company: 'Freelance',
     type: 'web',
@@ -97,20 +121,8 @@ export const projects: Project[] = [
     imageCount: 2,
   },
   {
-    id: 4,
-    title: 'Plateforme Ticketing',
-    company: 'Kleos',
-    type: 'web',
-    desc: 'Système de billetterie avec QR codes et validation instantanée.',
-    fullDescription:
-      'Solution complète de billetterie pour événements : génération de billets avec QR code sécurisé, validation via scanner mobile, statistiques en temps réel.',
-    tech: ['Symfony', 'Twig', 'TCPDF', 'MySQL', 'Bootstrap'],
-    live: '#',
-    code: '#',
-    imageCount: 3,
-  },
-  {
     id: 5,
+    slug: 'pte',
     title: 'Gestion RH & Réservation Véhicules',
     company: 'Prologic',
     type: 'mobile',
@@ -134,22 +146,16 @@ export const projects: Project[] = [
   },
   {
     id: 6,
-    title: 'ArabiLex',
-    company: 'Open Source',
+    slug: 'ticketing',
+    title: 'Plateforme Ticketing',
+    company: 'Kleos',
     type: 'web',
-    desc: 'Moteur de recherche arabe avancé — recherche par début, fin, inclusion ou permutation de lettres.',
+    desc: 'Système de billetterie avec QR codes et validation instantanée.',
     fullDescription:
-      "ArabiLex est un moteur de recherche dédié à la langue arabe, conçu pour permettre des recherches lexicale et morphologique flexibles : recherche par préfixe, suffixe, inclusion (contains) et permutations d'ordres de lettres. Le projet met l'accent sur la normalisation de l'arabe (gestion des diacritiques, hamza, ta marbuta, alef variations), une interface RTL conviviale et des algorithmes de recherche optimisés côté client/serveur selon l'implémentation. Idéal pour linguistes, enseignants, étudiants et développeurs travaillant sur le traitement du texte arabe ou des dictionnaires interactifs.",
-    tech: [
-      'Python',
-      'JavaScript',
-      'HTML',
-      'CSS',
-      'Arabic normalization',
-      'RTL UI',
-    ],
-    live: 'https://arabilex.netlify.app/',
-    code: 'https://github.com/yassindaboussi/ArabiLex',
+      'Solution complète de billetterie pour événements : génération de billets avec QR code sécurisé, validation via scanner mobile, statistiques en temps réel.',
+    tech: ['Symfony', 'Twig', 'TCPDF', 'MySQL', 'Bootstrap'],
+    live: '#',
+    code: '#',
     imageCount: 3,
   },
 ];

@@ -1,10 +1,19 @@
 // app/page.tsx
 'use client';
+
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Menu, X, Mail, Download, Sparkles, Globe,
-  Smartphone, Monitor, CalendarDays, Phone
+  Menu,
+  X,
+  Mail,
+  Download,
+  Sparkles,
+  Globe,
+  Smartphone,
+  Monitor,
+  CalendarDays,
+  Phone,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
@@ -33,7 +42,7 @@ export default function Page() {
       },
       { threshold: 0.5 }
     );
-    ['home', 'profile', 'skills', 'projects', 'contact'].forEach(id => {
+    ['home', 'profile', 'skills', 'projects', 'contact'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -45,7 +54,7 @@ export default function Page() {
     setMenuOpen(false);
   };
 
-  const filtered = filter === 'all' ? projects : projects.filter(p => p.type === filter);
+  const filtered = filter === 'all' ? projects : projects.filter((p) => p.type === filter);
 
   const filters = [
     { key: 'all', label: 'Tous', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
@@ -54,9 +63,9 @@ export default function Page() {
     { key: 'desktop', label: 'Desktop', icon: Monitor, color: 'from-indigo-500 to-purple-600' },
   ];
 
-  // Helper function to get project banner image
+  // Use slug for banner image
   const getProjectBanner = (project: typeof projects[0]) => {
-    return `/project/${project.type}/${project.id}/1.jpg`;
+    return `/project/${project.type}/${project.slug}/1.jpg`;
   };
 
   return (
@@ -70,9 +79,9 @@ export default function Page() {
           overflow-x: hidden;
         }
         .glass {
-          background: rgba(255,255,255,0.05);
+          background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(12px);
-          border: 1px solid rgba(255,255,255,0.1);
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .gradient-text {
           background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
@@ -86,24 +95,31 @@ export default function Page() {
       <motion.div
         className="fixed w-8 h-8 rounded-full bg-gradient-to-r from-purple-500/30 to-cyan-400/30 pointer-events-none z-50 blur-xl"
         animate={{ x: mousePosition.x - 16, y: mousePosition.y - 16 }}
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
       />
 
       {/* Navigation */}
       <motion.nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
         <div className="glass px-6 py-3 rounded-full flex items-center gap-8 backdrop-blur-xl">
           <div className="hidden md:flex items-center gap-1">
-            {['home', 'profile', 'skills', 'projects', 'contact'].map((id) => (
+            {['home', 'profile', 'skills', 'projects', 'contact'].map(id => (
               <motion.button
                 key={id}
                 onClick={() => scrollTo(id)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'
+                }`}
                 whileHover={{ scale: 1.05 }}
               >
-                {id === 'home' ? 'Accueil' :
-                 id === 'profile' ? 'Profil' :
-                 id === 'skills' ? 'Compétences' :
-                 id === 'projects' ? 'Projets' : 'Contact'}
+                {id === 'home'
+                  ? 'Accueil'
+                  : id === 'profile'
+                  ? 'Profil'
+                  : id === 'skills'
+                  ? 'Compétences'
+                  : id === 'projects'
+                  ? 'Projets'
+                  : 'Contact'}
               </motion.button>
             ))}
           </div>
@@ -134,19 +150,19 @@ export default function Page() {
             exit={{ opacity: 0 }}
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
-              {['home', 'profile', 'skills', 'projects', 'contact'].map(id => (
-                <motion.button
-                  key={id}
-                  onClick={() => scrollTo(id)}
-                  className="hover:text-cyan-400 transition"
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {id === 'home' ? 'Accueil' :
-                   id === 'profile' ? 'Profil' :
-                   id === 'skills' ? 'Compétences' :
-                   id === 'projects' ? 'Projets' : 'Contact'}
-                </motion.button>
-              ))}
+            {['home', 'profile', 'skills', 'projects', 'contact'].map((id) => (
+              <motion.button
+                key={id}
+                onClick={() => scrollTo(id)}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'}`}
+                whileHover={{ scale: 1.05 }}
+              >
+                {id === 'home' ? 'Accueil' :
+                 id === 'profile' ? 'Profil' :
+                 id === 'skills' ? 'Compétences' :
+                 id === 'projects' ? 'Projets' : 'Contact'}
+              </motion.button>
+            ))}
               <a
                 href="https://cal.com/yassin-daboussi"
                 target="_blank"
@@ -183,12 +199,20 @@ export default function Page() {
           >
             Je transforme des idées en applications performantes, du concept à la production.
           </motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/data/CV_Daboussi_Yassin.pdf" className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <a
+              href="/data/CV_Daboussi_Yassin.pdf"
+              className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl"
+            >
               <Download size={20} /> Télécharger mon CV
             </a>
             <button onClick={() => scrollTo('projects')} className="glass px-8 py-4 rounded-full font-medium">
-              Voir mes projets →
+              Voir mes projets
             </button>
           </motion.div>
         </div>
@@ -240,7 +264,12 @@ export default function Page() {
 
       {/* Skills */}
       <section id="skills" className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
           <h2 className="text-5xl md:text-6xl font-bold mb-4">
             Technos que je <span className="gradient-text">maîtrise</span>
           </h2>
@@ -257,7 +286,7 @@ export default function Page() {
             { name: 'MongoDB', icon: 'mongodb' },
             { name: 'SnowFlake', icon: 'snowflake' },
             { name: 'AWS', icon: 'aws' },
-            { name: 'GIT', icon: 'git' }
+            { name: 'GIT', icon: 'git' },
           ].map((tech, i) => (
             <motion.div
               key={tech.name}
@@ -276,13 +305,14 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Projects - WITH IMAGES */}
+      {/* Projects */}
       <section id="projects" className="py-20 px-6 max-w-7xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <h2 className="text-5xl font-bold text-center mb-4">
             Mes <span className="gradient-text">Projets</span>
           </h2>
           <p className="text-center text-gray-400 mb-12">Des solutions complètes, livrées avec passion</p>
+
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             {filters.map((f) => {
               const Icon = f.icon;
@@ -292,18 +322,23 @@ export default function Page() {
                   key={f.key}
                   onClick={() => setFilter(f.key as any)}
                   className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                    active ? `bg-gradient-to-r ${f.color} text-white shadow-lg` : 'glass hover:bg-white/10'
+                    active
+                      ? `bg-gradient-to-r ${f.color} text-white shadow-lg`
+                      : 'glass hover:bg-white/10'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Icon size={16} />
                   {f.label}
-                  {f.key !== 'all' && <span className="ml-1 opacity-70">({projects.filter(p => p.type === f.key).length})</span>}
+                  {f.key !== 'all' && (
+                    <span className="ml-1 opacity-70">({projects.filter((p) => p.type === f.key).length})</span>
+                  )}
                 </motion.button>
               );
             })}
           </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {filtered.map((project, i) => (
@@ -316,15 +351,14 @@ export default function Page() {
                   transition={{ delay: i * 0.05 }}
                   className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/30 transition-all cursor-pointer"
                   whileHover={{ y: -12 }}
-                  onClick={() => router.push(`/projects/${project.id}`)}
+                  onClick={() => router.push(`/projects/${project.slug}`)} // SLUG HERE
                 >
                   <div className="h-48 relative overflow-hidden">
-                    <img 
-                      src={getProjectBanner(project)} 
+                    <img
+                      src={getProjectBanner(project)} // SLUG HERE
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
-                        // Fallback to gradient if image doesn't exist
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextElementSibling?.classList.remove('hidden');
                       }}
@@ -344,7 +378,7 @@ export default function Page() {
                     </p>
                     <p className="text-gray-300 text-sm mb-6 line-clamp-2">{project.desc}</p>
                     <div className="flex flex-wrap gap-2">
-                      {project.tech.slice(0, 3).map(t => (
+                      {project.tech.slice(0, 3).map((t) => (
                         <span key={t} className="text-xs px-3 py-1 bg-white/5 rounded-full border border-white/10">
                           {t}
                         </span>
@@ -382,7 +416,10 @@ export default function Page() {
               <p className="font-medium">+216 29 670 343</p>
             </div>
           </div>
-          <a href="/data/CV_Daboussi_Yassin.pdf" className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl">
+          <a
+            href="/data/CV_Daboussi_Yassin.pdf"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl"
+          >
             <Download /> Télécharger mon CV
           </a>
         </motion.div>
