@@ -403,7 +403,7 @@ export default function Page() {
             Disponible pour des missions freelance ou un poste en CDI.
           </p>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <a href="mailto:yassin.daboussi@esprit.tn" className="glass p-8 rounded-2xl hover:bg-white/10 transition">
+            <a className="glass p-8 rounded-2xl hover:bg-white/10 transition">
               <Mail className="mx-auto mb-4 text-purple-400" size={32} />
               <p className="font-medium">yassin.daboussi@esprit.tn</p>
             </a>
