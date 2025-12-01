@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -14,7 +15,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Yassin Daboussi",
-  description: "My Portfolio",
+  description: "Portfolio Full-Stack Developer",
+  openGraph: {
+    title: "Yassin Daboussi",
+    description: "Ingénieur Full-Stack • React • Symfony • Flutter • AWS",
+    url: "https://yassindaboussi.netlify.app",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
@@ -23,10 +30,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="fr">
+      <head>
+        {/* Umami Analytics – Ton tracking secret */}
+        <script
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id="b1d8aeaa-2b98-4776-9069-4295d621fd1c"
+        ></script>
+
+        {/* Optionnel : si tu veux voir les IPs exactes (sinon elles sont masquées) */}
+        <meta name="umami" content="disable-ip" />
+      </head>
+
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
