@@ -62,7 +62,7 @@ export const projects: Project[] = [
     ],
     live: '#',
     code: '#',
-    imageCount: 3,
+    imageCount: 6,
   },
   {
     id: 3,
