@@ -4,7 +4,7 @@ export type ProjectType = 'web' | 'mobile' | 'desktop';
 
 export interface Project {
   id: number;
-  slug: string;                    // <-- NEW: used for folder name and URL
+  slug: string;
   title: string;
   company: string;
   type: ProjectType;
@@ -123,7 +123,7 @@ export const projects: Project[] = [
   {
     id: 5,
     slug: 'pte',
-    title: 'Gestion RH & Réservation Véhicules',
+    title: 'Gestion RH & Réservation',
     company: 'Prologic',
     type: 'mobile',
     desc: 'Application mobile Flutter de gestion RH, réservation de véhicules et salles de réunion.',

@@ -14,6 +14,9 @@ import {
   Monitor,
   CalendarDays,
   Phone,
+  ExternalLink,
+  Github,
+  Eye,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
@@ -240,6 +243,48 @@ export default function Page() {
             <p className="text-lg text-gray-300 mb-8 leading-relaxed">
               J'adopte une approche "one-man army" : ma passion me pousse à aller au-delà du code, avec le souci du détail et d'une vraie expérience utilisateur.
             </p>
+            
+            {/* Liens LinkedIn et GitHub */}
+            <div className="flex gap-4 mb-8">
+              <motion.a
+                href="https://linkedin.com/in/yassindaboussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass px-6 py-3 rounded-lg flex items-center gap-3 hover:bg-white/10 transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <img 
+                  src="/icons/linkedin.svg" 
+                  alt="LinkedIn" 
+                  className="w-5 h-5"
+                  onError={(e) => {
+                    // Fallback si l'icône n'existe pas
+                    e.currentTarget.style.display = 'none';
+                    const parent = e.currentTarget.parentElement;
+                    if (parent) {
+                      parent.innerHTML = '<span class="font-medium">LinkedIn</span>';
+                    }
+                  }}
+                />
+                <span className="font-medium">LinkedIn</span>
+                <ExternalLink size={14} className="text-gray-400" />
+              </motion.a>
+              
+              <motion.a
+                href="https://github.com/yassindaboussi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass px-6 py-3 rounded-lg flex items-center gap-3 hover:bg-white/10 transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Github size={20} />
+                <span className="font-medium">GitHub</span>
+                <ExternalLink size={14} className="text-gray-400" />
+              </motion.a>
+            </div>
+            
             <div className="flex gap-4">
               <div className="text-center">
                 <div className="text-4xl font-bold gradient-text">2+</div>
@@ -353,13 +398,12 @@ export default function Page() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ delay: i * 0.05 }}
-                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/30 transition-all cursor-pointer"
-                  whileHover={{ y: -12 }}
-                  onClick={() => router.push(`/projects/${project.slug}`)} // SLUG HERE
+                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/30 transition-all"
+                  whileHover={{ y: -8 }}
                 >
-                  <div className="h-48 relative overflow-hidden">
+                  <div className="relative h-52 overflow-hidden">
                     <img
-                      src={getProjectBanner(project)} // SLUG HERE
+                      src={getProjectBanner(project)}
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
@@ -370,24 +414,58 @@ export default function Page() {
                     <div className="hidden absolute inset-0 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
                       <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    <span className="absolute top-4 right-4 text-xs px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full capitalize font-medium border border-white/20">
+                      {project.type}
+                    </span>
                   </div>
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold">{project.title}</h3>
-                      <span className="text-xs px-3 py-1 bg-white/10 rounded-full capitalize">{project.type}</span>
-                    </div>
-                    <p className="text-sm text-gray-400 mb-2">
-                      {project.company === 'Freelance' ? 'Freelance' : `chez ${project.company}`}
+                  
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                    <p className="text-sm text-purple-300 mb-3 font-medium">
+                      {project.company === 'Freelance' 
+                        ? 'Freelance' 
+                        : project.company === 'Open Source'
+                          ? 'Open Source'
+                          : `chez ${project.company}`}
                     </p>
-                    <p className="text-gray-300 text-sm mb-6 line-clamp-2">{project.desc}</p>
-                    <div className="flex flex-wrap gap-2">
+                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.desc}</p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {project.tech.slice(0, 3).map((t) => (
-                        <span key={t} className="text-xs px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                        <span key={t} className="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/10">
                           {t}
                         </span>
                       ))}
-                      {project.tech.length > 3 && <span className="text-xs text-gray-500">+{project.tech.length - 3}</span>}
+                      {project.tech.length > 3 && (
+                        <span className="text-xs text-gray-500 self-center">+{project.tech.length - 3}</span>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 pt-3 border-t border-white/10">
+                    <motion.button
+                      onClick={() => router.push(`/projects/${project.slug}`)}
+                      className="flex-1 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Eye size={16} />
+                      Voir le détail
+                    </motion.button>
+                      
+                      {project.code && project.code !== '#' && (
+                        <motion.a
+                          href={project.code}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="glass hover:bg-white/15 px-4 py-2.5 rounded-lg flex items-center justify-center transition-all"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Github size={18} />
+                        </motion.a>
+                      )}
                     </div>
                   </div>
                 </motion.article>
