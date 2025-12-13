@@ -287,7 +287,7 @@ export default function Page() {
             
             <div className="flex gap-4">
               <div className="text-center">
-                <div className="text-4xl font-bold gradient-text">2+</div>
+                <div className="text-4xl font-bold gradient-text">1+</div>
                 <div className="text-sm text-gray-400">Ans d'expérience</div>
               </div>
               <div className="text-center">
