@@ -427,7 +427,9 @@ export default function Page() {
                         ? 'Freelance' 
                         : project.company === 'Open Source'
                           ? 'Open Source'
-                          : `chez ${project.company}`}
+                          : project.company === 'Projet Personnel'
+                            ? 'Projet Personnel'
+                            : `chez ${project.company}`}
                     </p>
                     <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.desc}</p>
                     
