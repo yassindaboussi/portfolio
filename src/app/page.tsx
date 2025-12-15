@@ -8,7 +8,6 @@ import {
   X,
   Mail,
   Download,
-  Sparkles,
   Globe,
   Smartphone,
   Monitor,
@@ -17,6 +16,7 @@ import {
   ExternalLink,
   Github,
   Eye,
+  CodeXml,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { projects } from '@/data/projects';
@@ -60,9 +60,9 @@ export default function Page() {
   const filtered = filter === 'all' ? projects : projects.filter((p) => p.type === filter);
 
   const filters = [
-    { key: 'all', label: 'Tous', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
-    { key: 'web', label: 'Web', icon: Globe, color: 'from-violet-500 to-purple-600' },
-    { key: 'mobile', label: 'Mobile', icon: Smartphone, color: 'from-blue-500 to-cyan-500' },
+    { key: 'all', label: 'Tous', icon: CodeXml, color: 'from-purple-500 to-pink-500' },
+    { key: 'web', label: 'Web', icon: Globe, color: 'from-blue-500 to-cyan-500' },
+    { key: 'mobile', label: 'Mobile', icon: Smartphone, color: 'from-emerald-500 to-green-500' },
     { key: 'desktop', label: 'Desktop', icon: Monitor, color: 'from-indigo-500 to-purple-600' },
   ];
 
@@ -326,13 +326,13 @@ export default function Page() {
         </motion.div>
         <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
           {[
-            { name: 'Symfony', icon: 'symfony' },
-            { name: 'React', icon: 'react' },
-            { name: 'Node.js', icon: 'nodejs' },
             { name: 'Kotlin', icon: 'kotlin' },
+            { name: 'Node.js', icon: 'nodejs' },
+            { name: 'Nextjs', icon: 'nextjs' },
+            { name: 'React', icon: 'react' },
             { name: 'Flutter', icon: 'flutter' },
-            { name: 'MySQL', icon: 'mysql' },
             { name: 'MongoDB', icon: 'mongodb' },
+            { name: 'MySQL', icon: 'mysql' },
             { name: 'SnowFlake', icon: 'snowflake' },
             { name: 'AWS', icon: 'aws' },
             { name: 'GIT', icon: 'git' },
@@ -362,26 +362,40 @@ export default function Page() {
           </h2>
           <p className="text-center text-gray-400 mb-12">Des solutions complètes, livrées avec passion</p>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {/* Filter Buttons - Enhanced */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16">
             {filters.map((f) => {
               const Icon = f.icon;
               const active = filter === f.key;
+              const count = f.key === 'all' ? projects.length : projects.filter(p => p.type === f.key).length;
+              
               return (
                 <motion.button
                   key={f.key}
                   onClick={() => setFilter(f.key as any)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
+                  className={`relative flex items-center gap-3 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                     active
-                      ? `bg-gradient-to-r ${f.color} text-white shadow-lg`
-                      : 'glass hover:bg-white/10'
+                      ? `bg-gradient-to-r ${f.color} text-white shadow-xl shadow-purple-500/20`
+                      : 'glass hover:bg-white/10 hover:shadow-lg'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Icon size={16} />
-                  {f.label}
-                  {f.key !== 'all' && (
-                    <span className="ml-1 opacity-70">({projects.filter((p) => p.type === f.key).length})</span>
+                  <Icon size={18} className={active ? 'text-white' : 'text-gray-400'} />
+                  <span>{f.label}</span>
+                  <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
+                    active ? 'bg-white/20' : 'bg-white/5'
+                  }`}>
+                    {count}
+                  </span>
+                  
+                  {active && (
+                    <motion.div
+                      layoutId="activeFilter"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 to-transparent"
+                      initial={false}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
                   )}
                 </motion.button>
               );
@@ -390,7 +404,8 @@ export default function Page() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
-              {filtered.map((project, i) => (
+              {filtered.length > 0 ? (
+              filtered.map((project, i) => (
                 <motion.article
                   key={project.id}
                   layout
@@ -415,9 +430,22 @@ export default function Page() {
                       <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                    <span className="absolute top-4 right-4 text-xs px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full capitalize font-medium border border-white/20">
-                      {project.type}
-                    </span>
+                  <span
+                    className={`absolute top-4 right-4 text-xs px-3 py-1.5 backdrop-blur-md rounded-full capitalize font-medium
+                    border border-white/10
+                    ${
+                      project.type === 'web'
+                        ? 'bg-gradient-to-r from-blue-400/60 to-cyan-400/60 text-white/90'
+                        : project.type === 'mobile'
+                        ? 'bg-gradient-to-r from-emerald-400/60 to-green-400/60 text-white/90'
+                        : project.type === 'desktop'
+                        ? 'bg-gradient-to-r from-indigo-400/60 to-purple-400/60 text-white/90'
+                        : 'bg-gradient-to-r from-purple-400/60 to-pink-400/60 text-white/90'
+                    }`}
+                  >
+                    {project.type}
+                  </span>
+
                   </div>
                   
                   <div className="p-5">
@@ -489,7 +517,55 @@ export default function Page() {
                     </div>
                   </div>
                 </motion.article>
-              ))}
+              ))
+              ) :
+               (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="col-span-full flex flex-col items-center justify-center py-12 text-center"      
+                >
+                <div className="relative mb-8">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/10 to-cyan-500/10 flex items-center justify-center">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center">
+                      <svg
+                        className="w-12 h-12 text-purple-400/50"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-3">
+                  Aucun projet trouvé
+                </h3>
+                <p className="text-gray-400 max-w-2xl text-lg leading-relaxed">
+                  Il n'y a actuellement aucun projet dans cette catégorie. 
+                  Essayez une autre filtre ou revenez plus tard pour découvrir de nouvelles réalisations.
+                </p>
+
+                <motion.button
+                  onClick={() => setFilter('all')}
+                  className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 rounded-full font-medium text-white shadow-lg shadow-purple-500/25 transition-all"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Voir tous les projets
+                </motion.button>
+              </motion.div>
+              )}
+                      
             </AnimatePresence>
           </div>
         </motion.div>
@@ -531,7 +607,7 @@ export default function Page() {
 
       {/* Footer */}
       <footer className="py-12 text-center text-gray-500 text-sm border-t border-white/10">
-        © {new Date().getFullYear()} Yassin Daboussi — Fait avec Next.js, Tailwind & amour
+        © {new Date().getFullYear()} Yassin Daboussi — Fait avec Next.js & Tailwind
       </footer>
     </>
   );
