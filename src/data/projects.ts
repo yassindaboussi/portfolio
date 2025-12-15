@@ -34,7 +34,7 @@ export const projects: Project[] = [
     ],
     live: 'https://worqly.netlify.app',
     code: 'https://github.com/yassindaboussi/worqly',
-    imageCount: 5,
+    imageCount: 7,
   },
   {
     id: 2,
@@ -160,6 +160,6 @@ export const projects: Project[] = [
     ],
     live: '#',
     code: '#',
-    imageCount: 3,
+    imageCount: 1,
   },
 ];

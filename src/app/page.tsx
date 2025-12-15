@@ -445,16 +445,17 @@ export default function Page() {
                     </div>
 
                     <div className="flex gap-2 pt-3 border-t border-white/10">
-                    <motion.button
-                      onClick={() => router.push(`/projects/${project.slug}`)}
-                      className="flex-1 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Eye size={16} />
-                      Voir le détail
-                    </motion.button>
+                      <motion.button
+                        onClick={() => router.push(`/projects/${project.slug}`)}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Eye size={16} />
+                        Voir le détail
+                      </motion.button>
                       
+                      {/* GitHub Code Link */}
                       {project.code && project.code !== '#' && (
                         <motion.a
                           href={project.code}
@@ -464,8 +465,25 @@ export default function Page() {
                           className="glass hover:bg-white/15 px-4 py-2.5 rounded-lg flex items-center justify-center transition-all"
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
+                          title="Voir le code source"
                         >
                           <Github size={18} />
+                        </motion.a>
+                      )}
+                      
+                      {/* Live Demo Link */}
+                      {project.live && project.live !== '#' && (
+                        <motion.a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="glass hover:bg-white/15 px-4 py-2.5 rounded-lg flex items-center justify-center transition-all"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          title="Voir la démo en direct"
+                        >
+                          <ExternalLink size={18} />
                         </motion.a>
                       )}
                     </div>
