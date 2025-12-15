@@ -162,4 +162,26 @@ export const projects: Project[] = [
     code: '#',
     imageCount: 1,
   },
+    {
+    id: 7,
+    slug: 'instanalyzer',
+    title: 'InstAnalyzer',
+    company: 'Projet Personnel',
+    type: 'web',
+    desc: 'Outil privacy-first pour analyser les relations de suivi Instagram via upload de données officielles — 100% client-side.',
+    fullDescription:
+      "InstAnalyzer est un outil web moderne et sécurisé permettant d'analyser instantanément les relations de suivi sur Instagram (qui ne vous suit pas en retour, fans, etc.) en uploadant vos fichiers JSON officiels téléchargés depuis Instagram. Tout le traitement se fait côté client dans le navigateur : aucune donnée n'est envoyée, collectée ou stockée. L'application gère plusieurs fichiers followers_*.json, affiche des insights intelligents avec dates de suivi, propose tri (alphabétique, ancienneté), actions rapides (copier usernames, ouvrir profils) et export CSV/JSON. Interface élégante avec mode sombre, glassmorphism et animations fluides pour une expérience premium et responsive.",
+    tech: [
+      'PHP 8.1+',
+      'Symfony 6/7',
+      'Twig',
+      'Tailwind CSS',
+      'Lucide Icons',
+      'JavaScript (client-side)',
+      'Glassmorphism UI'
+      ],
+    live: '#',
+    code: 'https://github.com/yassindaboussi/instanalyzer',
+    imageCount: 4,
+  },
 ];
