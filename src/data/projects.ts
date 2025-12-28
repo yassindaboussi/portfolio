@@ -196,10 +196,9 @@ export const projects: Project[] = [
     type: 'mobile',
     desc: 'Système de billetterie avec QR codes et validation instantanée.',
     fullDescription:
-      'Solution complète de billetterie pour événements : génération de billets avec QR code sécurisé, validation via scanner mobile, statistiques en temps réel. Développée en Kotlin pour Android avec backend Node.js et MongoDB. Le système permet la création, distribution et validation numérique de billets pour événements, concerts et conférences, avec interface admin pour la gestion des événements et suivi des statistiques.',
+      'Solution complète de billetterie pour événements : génération de billets avec QR code sécurisé, validation via scanner mobile, statistiques en temps réel. Développée en flutter avec backend Node.js et MongoDB. Le système permet la création, distribution et validation numérique de billets pour événements, concerts et conférences, avec interface admin pour la gestion des événements et suivi des statistiques.',
     tech: [
-      'Kotlin',
-      'Android',
+      'Flutter',
       'SQLite',
       'Node.js',
       'MongoDB',
