@@ -30,6 +30,11 @@ function Lightbox({
   onPrev,
   onNext,
   onThumbClick,
+  hasMoreThumbs,
+  thumbStartIndex,
+  visibleThumbs,
+  scrollThumbsLeft,
+  scrollThumbsRight,
 }: {
   images: string[];
   index: number;
@@ -37,7 +42,16 @@ function Lightbox({
   onPrev: () => void;
   onNext: () => void;
   onThumbClick?: (i: number) => void;
+  hasMoreThumbs: boolean;
+  thumbStartIndex: number;
+  visibleThumbs: number;
+  scrollThumbsLeft: () => void;
+  scrollThumbsRight: () => void;
 }) {
+  const visibleImages = hasMoreThumbs
+    ? images.slice(thumbStartIndex, thumbStartIndex + visibleThumbs)
+    : images;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -100,23 +114,48 @@ function Lightbox({
         <motion.div
           initial={{ y: 18, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="fixed bottom-4 left-1/2 z-20 w-[92vw] max-w-3xl -translate-x-1/2 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-xl"
+          className="fixed bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-2xl border border-white/20 bg-white/20 p-3"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {images.map((src, i) => (
-              <button
-                key={i}
-                onClick={() => onThumbClick?.(i)}
-                className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
-                  index === i
-                    ? 'border-purple-400 scale-105'
-                    : 'border-white/10 hover:border-white/30'
-                }`}
+          <div className="flex items-center gap-2">
+            {hasMoreThumbs && thumbStartIndex > 0 && (
+              <motion.button
+                onClick={scrollThumbsLeft}
+                className="rounded-xl border border-white/10 bg-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/15 transition-all"
+                whileHover={{ scale: 1.05 }}
               >
-                <img src={src} alt="" className="h-full w-full object-cover" />
-              </button>
-            ))}
+                <ChevronLeft size={14} />
+              </motion.button>
+            )}
+
+            <div className="flex gap-2">
+              {visibleImages.map((src, i) => {
+                const actualIndex = hasMoreThumbs ? thumbStartIndex + i : i;
+                return (
+                  <button
+                    key={actualIndex}
+                    onClick={() => onThumbClick?.(actualIndex)}
+                    className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
+                      index === actualIndex
+                        ? 'border-purple-400 scale-105'
+                        : 'border-white/10 hover:border-white/30'
+                    }`}
+                  >
+                    <img src={src} alt="" className="h-full w-full object-cover" />
+                  </button>
+                );
+              })}
+            </div>
+
+            {hasMoreThumbs && thumbStartIndex + visibleThumbs < images.length && (
+              <motion.button
+                onClick={scrollThumbsRight}
+                className="rounded-xl border border-white/10 bg-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/15 transition-all"
+                whileHover={{ scale: 1.05 }}
+              >
+                <ChevronRight size={14} />
+              </motion.button>
+            )}
           </div>
         </motion.div>
       )}
@@ -135,24 +174,68 @@ export default function ProjectPage() {
   const [lightbox, setLightbox] = useState(false);
   const thumbsRef = useRef<HTMLDivElement>(null);
 
+  // Thumbnail pagination state
+  const [thumbStartIndex, setThumbStartIndex] = useState(0);
+  const visibleThumbs = 6;
+  const hasMoreThumbs = project ? (project.imageCount ?? 1) > visibleThumbs : false;
+
   const images = project
     ? Array.from({ length: project.imageCount ?? 1 }, (_, i) =>
         `/project/${project.type}/${project.slug}/${i + 1}.jpg`,
       )
     : [];
 
+  // ── Navigation with thumbnail sync ───────────────────────────────────────
+
   const prev = useCallback(() => {
-    setImgIndex((n) => (n - 1 + images.length) % images.length);
-  }, [images.length]);
+    const newIndex = (imgIndex - 1 + images.length) % images.length;
+
+    if (hasMoreThumbs) {
+      if (imgIndex === 0) {
+        // Wrapping from first → last: scroll thumbnails to show last image
+        setThumbStartIndex(Math.max(0, images.length - visibleThumbs));
+      } else if (newIndex < thumbStartIndex) {
+        // Stepped behind the visible window
+        setThumbStartIndex(Math.max(0, thumbStartIndex - visibleThumbs));
+      }
+    }
+
+    setImgIndex(newIndex);
+  }, [imgIndex, images.length, hasMoreThumbs, thumbStartIndex, visibleThumbs]);
 
   const next = useCallback(() => {
-    setImgIndex((n) => (n + 1) % images.length);
-  }, [images.length]);
+    const newIndex = (imgIndex + 1) % images.length;
+
+    if (hasMoreThumbs) {
+      if (imgIndex === images.length - 1) {
+        // Wrapping from last → first: scroll thumbnails back to start
+        setThumbStartIndex(0);
+      } else if (newIndex >= thumbStartIndex + visibleThumbs) {
+        // Stepped beyond the visible window
+        setThumbStartIndex(
+          Math.min(images.length - visibleThumbs, thumbStartIndex + visibleThumbs),
+        );
+      }
+    }
+
+    setImgIndex(newIndex);
+  }, [imgIndex, images.length, hasMoreThumbs, thumbStartIndex, visibleThumbs]);
+
+  const scrollThumbsLeft = () => {
+    setThumbStartIndex(Math.max(0, thumbStartIndex - visibleThumbs));
+  };
+
+  const scrollThumbsRight = () => {
+    setThumbStartIndex(
+      Math.min(images.length - visibleThumbs, thumbStartIndex + visibleThumbs),
+    );
+  };
+
+  // ── Side effects ─────────────────────────────────────────────────────────
 
   useEffect(() => {
     if (lightbox) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
-
     return () => {
       document.body.style.overflow = '';
     };
@@ -160,20 +243,21 @@ export default function ProjectPage() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!lightbox) return;
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'Escape') setLightbox(false);
+      if (images.length <= 1) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      if (lightbox && e.key === 'Escape') setLightbox(false);
     };
-
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [lightbox, prev, next]);
+  }, [images.length, prev, next, lightbox]);
 
   useEffect(() => {
     const el = thumbsRef.current?.children[imgIndex] as HTMLElement | undefined;
     el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   }, [imgIndex]);
+
+  // ── Not found ─────────────────────────────────────────────────────────────
 
   if (!project) {
     return (
@@ -199,6 +283,11 @@ export default function ProjectPage() {
   const companyLabel = ['Freelance', 'Open Source', 'Projet Personnel'].includes(project.company)
     ? project.company
     : `chez ${project.company}`;
+
+  // Visible thumbnails slice
+  const visibleImages = hasMoreThumbs
+    ? images.slice(thumbStartIndex, thumbStartIndex + visibleThumbs)
+    : images;
 
   return (
     <>
@@ -236,7 +325,6 @@ export default function ProjectPage() {
                   <h1 className="heading text-2xl sm:text-3xl lg:text-4xl leading-tight">
                     {project.title}
                   </h1>
-
                   <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-[15px]">
                     {project.desc}
                   </p>
@@ -254,7 +342,6 @@ export default function ProjectPage() {
                         variant="primary"
                       />
                     )}
-
                     {project.code && project.code !== '#' && (
                       <ActionButton
                         href={project.code}
@@ -264,7 +351,6 @@ export default function ProjectPage() {
                         variant="secondary"
                       />
                     )}
-
                     <ActionButton
                       href={SITE.contact.cal}
                       icon={<CalendarDays size={16} />}
@@ -337,29 +423,53 @@ export default function ProjectPage() {
                   )}
                 </div>
 
-                {/* Bottom strip under image */}
+                {/* Thumbnail strip */}
                 <div className="space-y-4 px-5 py-5 sm:px-6 lg:px-8">
                   {images.length > 1 && (
-                    <div
-                      ref={thumbsRef}
-                      className="flex gap-2 overflow-x-auto scrollbar-hide"
-                    >
-                      {images.map((src, i) => (
+                    <div className="flex items-center gap-2">
+                      {/* Left scroll button — only show when there are hidden thumbs to the left */}
+                      {hasMoreThumbs && thumbStartIndex > 0 && (
                         <button
-                          key={i}
-                          onClick={() => setImgIndex(i)}
-                          className={`h-16 w-24 flex-shrink-0 overflow-hidden rounded-2xl border transition-all ${
-                            imgIndex === i
-                              ? 'border-purple-400/80 ring-1 ring-purple-400/30'
-                              : 'border-white/10 hover:border-white/25'
-                          }`}
+                          onClick={scrollThumbsLeft}
+                          className="rounded-xl border border-white/10 bg-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/15 transition-all flex-shrink-0"
                         >
-                          <img src={src} alt="" className="h-full w-full object-cover" />
+                          <ChevronLeft size={14} />
                         </button>
-                      ))}
+                      )}
+
+                      <div
+                        ref={thumbsRef}
+                        className="flex gap-2 overflow-x-auto scrollbar-hide"
+                      >
+                        {visibleImages.map((src, i) => {
+                          const actualIndex = hasMoreThumbs ? thumbStartIndex + i : i;
+                          return (
+                            <button
+                              key={actualIndex}
+                              onClick={() => setImgIndex(actualIndex)}
+                              className={`h-16 w-24 flex-shrink-0 overflow-hidden rounded-2xl border transition-all ${
+                                imgIndex === actualIndex
+                                  ? 'border-purple-400/80 ring-1 ring-purple-400/30'
+                                  : 'border-white/10 hover:border-white/25'
+                              }`}
+                            >
+                              <img src={src} alt="" className="h-full w-full object-cover" />
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Right scroll button — only show when there are hidden thumbs to the right */}
+                      {hasMoreThumbs && thumbStartIndex + visibleThumbs < images.length && (
+                        <button
+                          onClick={scrollThumbsRight}
+                          className="rounded-xl border border-white/10 bg-white/10 p-1.5 text-white/80 hover:text-white hover:bg-white/15 transition-all flex-shrink-0"
+                        >
+                          <ChevronRight size={14} />
+                        </button>
+                      )}
                     </div>
                   )}
-
                 </div>
               </div>
 
@@ -371,7 +481,7 @@ export default function ProjectPage() {
                       <h2 className="mb-3 text-sm font-semibold tracking-wide text-white/90">
                         À propos du projet
                       </h2>
-                      
+
                       <div className="mb-4 flex flex-wrap items-center gap-2">
                         <span
                           className={`inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-gradient-to-r px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${TYPE_COLOR[project.type]}`}
@@ -385,11 +495,11 @@ export default function ProjectPage() {
                           {companyLabel}
                         </span>
                       </div>
-                      
+
                       <p className="text-sm leading-relaxed text-white/65">
                         {project.fullDescription ?? project.desc}
                       </p>
-                      
+
                       <div className="mt-2">
                         <div className="mb-2 flex items-center gap-2">
                           <Layers size={15} className="text-purple-400" />
@@ -411,7 +521,6 @@ export default function ProjectPage() {
                       </div>
                     </section>
 
-                    
                     {/* Mobile/tablet actions */}
                     <section className="lg:hidden">
                       <h3 className="mb-3 text-sm font-semibold tracking-wide text-white/90">
@@ -428,7 +537,6 @@ export default function ProjectPage() {
                             variant="primary"
                           />
                         )}
-
                         {project.code && project.code !== '#' && (
                           <ActionButton
                             href={project.code}
@@ -438,7 +546,6 @@ export default function ProjectPage() {
                             variant="secondary"
                           />
                         )}
-
                         <ActionButton
                           href={SITE.contact.cal}
                           icon={<CalendarDays size={16} />}
@@ -464,7 +571,19 @@ export default function ProjectPage() {
             onClose={() => setLightbox(false)}
             onPrev={prev}
             onNext={next}
-            onThumbClick={setImgIndex}
+            onThumbClick={(i) => {
+              setImgIndex(i);
+              // When clicking a thumb in lightbox, also sync the main strip
+              if (hasMoreThumbs) {
+                const batchStart = Math.floor(i / visibleThumbs) * visibleThumbs;
+                setThumbStartIndex(Math.min(batchStart, images.length - visibleThumbs));
+              }
+            }}
+            hasMoreThumbs={hasMoreThumbs}
+            thumbStartIndex={thumbStartIndex}
+            visibleThumbs={visibleThumbs}
+            scrollThumbsLeft={scrollThumbsLeft}
+            scrollThumbsRight={scrollThumbsRight}
           />
         )}
       </AnimatePresence>
@@ -493,10 +612,7 @@ function InfoRow({
           {label}
         </span>
       </div>
-
-      <span className="truncate text-right text-xs font-medium text-white/85">
-        {value}
-      </span>
+      <span className="truncate text-right text-xs font-medium text-white/85">{value}</span>
     </div>
   );
 }
@@ -534,7 +650,6 @@ function ActionButton({
         <div className="flex h-6 w-6 items-center justify-center rounded-md border border-white/10 bg-white/8 text-white/85">
           {icon}
         </div>
-
         <div>
           <div className="text-xs font-semibold text-white/90">{label}</div>
           {sublabel && <div className="text-[10px] text-white/50">{sublabel}</div>}

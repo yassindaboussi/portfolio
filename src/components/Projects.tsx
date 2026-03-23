@@ -81,8 +81,9 @@ export default function Projects() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.92 }}
                   transition={{ delay: i * 0.04 }}
-                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all"
+                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all cursor-pointer"
                   whileHover={{ y: -7 }}
+                  onClick={() => router.push(`/projects/${project.slug}`)}
                 >
                   {/* Banner image — 16:9 aspect ratio */}
                   <div className={`relative aspect-video overflow-hidden bg-gradient-to-br ${TYPE_PLACEHOLDER[project.type]}`}>
@@ -133,7 +134,10 @@ export default function Projects() {
                     {/* Actions */}
                     <div className="flex gap-2 pt-3 border-t border-white/8">
                       <motion.button
-                        onClick={() => router.push(`/projects/${project.slug}`)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/projects/${project.slug}`);
+                        }}
                         className="flex-1 bg-gradient-to-r from-purple-500 to-cyan-500 px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
                         whileTap={{ scale: 0.97 }}
                       >
