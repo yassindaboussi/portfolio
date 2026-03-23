@@ -1,23 +1,35 @@
 'use client';
-// app/projects/[slug]/page.tsx
-// Project detail: gallery, description, tech stack, links.
 
 import { useParams, useRouter } from 'next/navigation';
-import { projects, type ProjectType, TYPE_COLOR } from '@/data/projects';
+import { projects, TYPE_COLOR } from '@/data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, ExternalLink, Github, CalendarDays,
-  ChevronLeft, ChevronRight, X, ZoomIn, Layers,
-  Globe, Smartphone, Monitor, Clock, Users,
+  ArrowLeft,
+  ExternalLink,
+  Github,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ZoomIn,
+  Layers,
+  Globe,
+  Smartphone,
+  Monitor,
+  Building2,
 } from 'lucide-react';
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { SITE } from '@/data/config';
 
 // ── Lightbox ─────────────────────────────────────────────────────────────────
 
 function Lightbox({
-  images, index, onClose, onPrev, onNext, onThumbClick,
+  images,
+  index,
+  onClose,
+  onPrev,
+  onNext,
+  onThumbClick,
 }: {
   images: string[];
   index: number;
@@ -31,65 +43,64 @@ function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black/96 backdrop-blur-xl flex items-center justify-center"
+      className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center"
       onClick={onClose}
     >
-      {/* Close */}
       <motion.button
         onClick={onClose}
-        className="fixed top-4 right-4 glass p-2 rounded-lg z-10"
-        whileHover={{ scale: 1.1, rotate: 90 }}
+        className="fixed top-4 right-4 z-20 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl p-3 text-white/80 hover:text-white hover:bg-white/15 transition-all"
+        whileHover={{ scale: 1.05, rotate: 90 }}
       >
-        <X size={20} />
+        <X size={18} />
       </motion.button>
 
-      {/* Counter */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 glass px-4 py-2 rounded-full text-sm font-medium z-10">
-        <span className="text-white/80">{index + 1} / {images.length}</span>
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 rounded-full border border-white/10 bg-white/10 backdrop-blur-xl px-4 py-2 text-sm text-white/80">
+        {index + 1} / {images.length}
       </div>
 
-      {/* Image */}
-      <div className="relative w-full h-full flex items-center justify-center p-4 md:p-8">
+      <div
+        className="relative flex h-full w-full items-center justify-center p-4 md:p-10"
+        onClick={(e) => e.stopPropagation()}
+      >
         <AnimatePresence mode="wait">
           <motion.img
             key={index}
             src={images[index]}
             alt=""
-            className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
-            initial={{ opacity: 0, scale: 0.95 }}
+            className="max-h-full max-w-full rounded-2xl object-contain shadow-2xl"
+            initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.25 }}
-            onClick={(e) => e.stopPropagation()}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.22 }}
           />
         </AnimatePresence>
 
         {images.length > 1 && (
           <>
             <motion.button
-              onClick={(e) => { e.stopPropagation(); onPrev(); }}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 glass p-3 rounded-lg z-10"
+              onClick={onPrev}
+              className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl p-3 text-white/80 hover:text-white hover:bg-white/15 transition-all"
               whileHover={{ scale: 1.05 }}
             >
-              <ChevronLeft size={24} className="text-white/80" />
+              <ChevronLeft size={22} />
             </motion.button>
+
             <motion.button
-              onClick={(e) => { e.stopPropagation(); onNext(); }}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 glass p-3 rounded-lg z-10"
+              onClick={onNext}
+              className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-2xl border border-white/10 bg-white/10 backdrop-blur-xl p-3 text-white/80 hover:text-white hover:bg-white/15 transition-all"
               whileHover={{ scale: 1.05 }}
             >
-              <ChevronRight size={24} className="text-white/80" />
+              <ChevronRight size={22} />
             </motion.button>
           </>
         )}
       </div>
 
-      {/* Thumbnail strip */}
       {images.length > 1 && (
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
+          initial={{ y: 18, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/40 rounded-xl p-3 z-10 max-w-lg w-[90vw]"
+          className="fixed bottom-4 left-1/2 z-20 w-[92vw] max-w-3xl -translate-x-1/2 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex gap-2 overflow-x-auto scrollbar-hide">
@@ -97,11 +108,13 @@ function Lightbox({
               <button
                 key={i}
                 onClick={() => onThumbClick?.(i)}
-                className={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden border-2 transition-all ${
-                  index === i ? 'border-purple-400 scale-110' : 'border-white/20 hover:border-white/40'
+                className={`h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${
+                  index === i
+                    ? 'border-purple-400 scale-105'
+                    : 'border-white/10 hover:border-white/30'
                 }`}
               >
-                <img src={src} alt="" className="w-full h-full object-cover" />
+                <img src={src} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
           </div>
@@ -128,33 +141,35 @@ export default function ProjectPage() {
       )
     : [];
 
-  const prev = useCallback(() => setImgIndex((n) => (n - 1 + images.length) % images.length), [images.length]);
-  const next = useCallback(() => setImgIndex((n) => (n + 1) % images.length), [images.length]);
+  const prev = useCallback(() => {
+    setImgIndex((n) => (n - 1 + images.length) % images.length);
+  }, [images.length]);
 
-  // Prevent body scroll when lightbox is open
+  const next = useCallback(() => {
+    setImgIndex((n) => (n + 1) % images.length);
+  }, [images.length]);
+
   useEffect(() => {
-    if (lightbox) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (lightbox) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+
     return () => {
       document.body.style.overflow = '';
     };
   }, [lightbox]);
 
-  // Keyboard navigation
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (!lightbox) return;
       if (e.key === 'ArrowLeft') prev();
       if (e.key === 'ArrowRight') next();
       if (e.key === 'Escape') setLightbox(false);
     };
+
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [prev, next]);
+  }, [lightbox, prev, next]);
 
-  // Scroll active thumbnail into view
   useEffect(() => {
     const el = thumbsRef.current?.children[imgIndex] as HTMLElement | undefined;
     el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
@@ -162,227 +177,285 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-6">
         <div className="text-center">
           <Layers size={40} className="mx-auto mb-3 text-purple-400" />
-          <h1 className="heading text-2xl mb-4">Projet non trouvé</h1>
-          <button onClick={() => router.back()} className="glass px-4 py-2 rounded-lg flex items-center gap-2 mx-auto hover:bg-white/10 transition-all text-sm">
-            <ArrowLeft size={16} /> Retour
+          <h1 className="heading mb-4 text-2xl">Projet non trouvé</h1>
+          <button
+            onClick={() => router.back()}
+            className="mx-auto flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/80 backdrop-blur-xl transition-all hover:bg-white/10"
+          >
+            <ArrowLeft size={16} />
+            Retour
           </button>
         </div>
       </div>
     );
   }
 
-  const typeIcon = project.type === 'web' ? Globe : project.type === 'mobile' ? Smartphone : Monitor;
-  const TypeIcon = typeIcon;
+  const TypeIcon =
+    project.type === 'web' ? Globe : project.type === 'mobile' ? Smartphone : Monitor;
+
+  const companyLabel = ['Freelance', 'Open Source', 'Projet Personnel'].includes(project.company)
+    ? project.company
+    : `chez ${project.company}`;
 
   return (
     <>
-      <div className="min-h-screen text-white relative">
+      <div className="relative min-h-screen overflow-hidden text-white">
         {/* Background */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-20 -left-20 w-60 h-60 bg-purple-600/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-60 h-60 bg-cyan-600/10 rounded-full blur-3xl" />
+        <div className="pointer-events-none fixed inset-0">
+          <div className="absolute left-[-120px] top-[-120px] h-72 w-72 rounded-full bg-purple-600/10 blur-3xl" />
+          <div className="absolute right-[-120px] top-1/3 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="absolute bottom-[-120px] left-1/3 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-3xl" />
         </div>
 
-        {/* Back button */}
+        {/* Floating back */}
         <motion.button
           onClick={() => router.back()}
-          className="fixed top-4 left-4 z-50 glass px-3 py-2 rounded-lg flex items-center gap-2 text-sm font-medium hover:bg-white/10 transition-all group"
-          initial={{ opacity: 0, y: -10 }}
+          className="fixed left-4 top-4 z-50 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-3 py-2 text-sm font-medium text-white/80 backdrop-blur-xl transition-all hover:bg-white/10 hover:text-white"
+          initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ x: -2 }}
         >
-          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+          <ArrowLeft size={14} />
           Retour
         </motion.button>
 
-        <div className="pt-4 pb-12 px-8 relative z-10 max-w-5xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+        <main className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+          {/* Unified shell */}
+          <motion.section
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4"
+            className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-2xl backdrop-blur-2xl"
           >
-            <div className="flex flex-wrap items-center gap-3 mb-2">
-              <h1 className="heading text-3xl md:text-4xl">{project.title}</h1>
-              <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded-full capitalize font-medium border border-white/10 bg-gradient-to-r ${TYPE_COLOR[project.type]} backdrop-blur-md text-xs flex items-center gap-1`}>
-                  <TypeIcon size={12} className="text-white/80" />
-                  {project.type}
-                </span>
-                <span className="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-medium">
-                  {['Freelance', 'Open Source', 'Projet Personnel'].includes(project.company)
-                    ? project.company
-                    : `chez ${project.company}`}
-                </span>
-              </div>
-            </div>
-            <p className="text-white/60 text-sm md:text-base leading-relaxed max-w-3xl">{project.desc}</p>
-          </motion.div>
+            {/* Top header strip */}
+            <div className="border-b border-white/10 px-5 py-5 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 flex-1">
+                  <h1 className="heading text-2xl sm:text-3xl lg:text-4xl leading-tight">
+                    {project.title}
+                  </h1>
 
-          {/* ── Single row: Gallery+Tech (left) + Sidebar (right) ── */}
-          <div className="grid lg:grid-cols-3 gap-4 items-start">
-
-            {/* Left column: Gallery + Technologies */}
-            <div className="lg:col-span-2 space-y-4">
-
-            {/* Gallery */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="glass rounded-2xl overflow-hidden"
-            >
-              {/* Main image */}
-              <div
-                className="relative aspect-video bg-black/30 cursor-pointer group"
-                onClick={() => setLightbox(true)}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={imgIndex}
-                    src={images[imgIndex]}
-                    alt={`${project.title} — ${imgIndex + 1}`}
-                    className="w-full h-full object-contain"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                  />
-                </AnimatePresence>
-
-                {/* Zoom hint */}
-                <div className="absolute top-3 right-3 glass p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all">
-                  <ZoomIn size={16} className={project.type === 'web' ? 'text-cyan-400' : project.type === 'mobile' ? 'text-green-400' : 'text-purple-400'} />
-                </div>
-
-                {/* Navigation */}
-                {images.length > 1 && (
-                  <>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); prev(); }}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 glass p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                    >
-                      <ChevronLeft size={18} className="text-white/70" />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); next(); }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 glass p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                    >
-                      <ChevronRight size={18} className="text-white/70" />
-                    </button>
-                    <div className="absolute bottom-3 right-3 glass px-3 py-1 rounded-full text-xs font-medium">
-                      <span className="text-white/70">{imgIndex + 1} / {images.length}</span>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Thumbnails */}
-              {images.length > 1 && (
-                <div ref={thumbsRef} className="flex gap-2 p-3 overflow-x-auto scrollbar-hide bg-black/10">
-                  {images.map((src, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setImgIndex(i)}
-                      className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
-                        imgIndex === i ? 'border-purple-400 scale-105' : 'border-white/10 hover:border-white/30'
-                      }`}
-                    >
-                      <img src={src} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </motion.div>
-
-              {/* Technologies — below gallery */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="glass rounded-2xl p-4"
-              >
-                <h3 className="heading text-base mb-2 gradient-text">Technologies</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tech.map((t) => (
-                    <motion.span
-                      key={t}
-                      className="px-1.5 py-0.5 bg-white/5 rounded-md text-xs border border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all font-medium"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      {t}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
-
-            </div>{/* end left column */}
-
-            {/* Sidebar — Description + Actions */}
-            <div className="space-y-3">
-
-              {/* Description */}
-              {(project.fullDescription || project.desc) && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.15 }}
-                  className="glass rounded-2xl p-4"
-                >
-                  <h2 className="heading text-base flex items-center gap-2 mb-2">
-                    <Layers size={16} className="text-purple-400" />
-                    <span className="gradient-text">Description</span>
-                  </h2>
-                  <p className="text-white/60 leading-relaxed text-xs">
-                    {project.fullDescription ?? project.desc}
+                  <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/65 sm:text-[15px]">
+                    {project.desc}
                   </p>
-                </motion.div>
-              )}
+                </div>
 
-              {/* Actions / Links */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.25 }}
-                className="glass rounded-2xl p-4 space-y-0.5"
-              >
-                <h3 className="heading text-base gradient-text">Actions</h3>
+                {/* Desktop CTA cluster */}
+                <div className="hidden lg:block flex-shrink-0">
+                  <div className="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
+                    {project.live && project.live !== '#' && (
+                      <ActionButton
+                        href={project.live}
+                        icon={<ExternalLink size={16} />}
+                        label="Voir le projet"
+                        sublabel="Live / Preview"
+                        variant="primary"
+                      />
+                    )}
 
-                {project.live && project.live !== '#' && (
-                  <LinkButton
-                    href={project.live}
-                    icon={<ExternalLink size={16} />}
-                    label="Voir le projet"
-                    gradient="from-cyan-500 to-blue-600"
-                  />
-                )}
-                {project.code && project.code !== '#' && (
-                  <LinkButton
-                    href={project.code}
-                    icon={<Github size={16} />}
-                    label="Code source"
-                    gradient="from-purple-600 to-pink-600"
-                  />
-                )}
-                <LinkButton
-                  href={SITE.contact.cal}
-                  icon={<CalendarDays size={16} />}
-                  label="Discuter du projet"
-                  sublabel="15-30 min"
-                  gradient="from-pink-600 via-purple-600 to-indigo-700"
-                />
-              </motion.div>
+                    {project.code && project.code !== '#' && (
+                      <ActionButton
+                        href={project.code}
+                        icon={<Github size={16} />}
+                        label="Code source"
+                        sublabel="Repository"
+                        variant="secondary"
+                      />
+                    )}
 
+                    <ActionButton
+                      href={SITE.contact.cal}
+                      icon={<CalendarDays size={16} />}
+                      label="Discuter du projet"
+                      sublabel="15–30 min"
+                      variant="ghost"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+
+            {/* Main content */}
+            <div className="grid gap-0 lg:grid-cols-[1.2fr_1fr]">
+              {/* Visual zone */}
+              <div className="border-b border-white/10 lg:border-b-0 lg:border-r lg:border-white/10">
+                {/* Main image */}
+                <div
+                  className="group relative h-[400px] w-full cursor-pointer overflow-hidden bg-black/25"
+                  onClick={() => setLightbox(true)}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={imgIndex}
+                      src={images[imgIndex]}
+                      alt={`${project.title} — ${imgIndex + 1}`}
+                      className="h-full w-full object-contain"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </AnimatePresence>
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+
+                  <div className="absolute right-4 top-4 rounded-2xl border border-white/10 bg-black/20 p-2 text-white/80 backdrop-blur-xl opacity-0 transition-all group-hover:opacity-100">
+                    <ZoomIn size={16} />
+                  </div>
+
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prev();
+                        }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-black/20 p-2.5 text-white/80 backdrop-blur-xl opacity-0 transition-all hover:text-white group-hover:opacity-100"
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          next();
+                        }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 rounded-2xl border border-white/10 bg-black/20 p-2.5 text-white/80 backdrop-blur-xl opacity-0 transition-all hover:text-white group-hover:opacity-100"
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+
+                      <div className="absolute bottom-4 right-4 rounded-full border border-white/10 bg-black/25 px-3 py-1 text-xs font-medium text-white/75 backdrop-blur-xl">
+                        {imgIndex + 1} / {images.length}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Bottom strip under image */}
+                <div className="space-y-4 px-5 py-5 sm:px-6 lg:px-8">
+                  {images.length > 1 && (
+                    <div
+                      ref={thumbsRef}
+                      className="flex gap-2 overflow-x-auto scrollbar-hide"
+                    >
+                      {images.map((src, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setImgIndex(i)}
+                          className={`h-16 w-24 flex-shrink-0 overflow-hidden rounded-2xl border transition-all ${
+                            imgIndex === i
+                              ? 'border-purple-400/80 ring-1 ring-purple-400/30'
+                              : 'border-white/10 hover:border-white/25'
+                          }`}
+                        >
+                          <img src={src} alt="" className="h-full w-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                </div>
+              </div>
+
+              {/* Info rail */}
+              <aside className="flex flex-col">
+                <div className="flex-1 px-5 py-5 sm:px-6 lg:px-8">
+                  <div className="space-y-6">
+                    <section>
+                      <h2 className="mb-3 text-sm font-semibold tracking-wide text-white/90">
+                        À propos du projet
+                      </h2>
+                      
+                      <div className="mb-4 flex flex-wrap items-center gap-2">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-gradient-to-r px-3 py-1 text-[11px] font-semibold uppercase tracking-wide ${TYPE_COLOR[project.type]}`}
+                        >
+                          <TypeIcon size={12} />
+                          {project.type}
+                        </span>
+
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-medium text-white/70">
+                          <Building2 size={12} />
+                          {companyLabel}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm leading-relaxed text-white/65">
+                        {project.fullDescription ?? project.desc}
+                      </p>
+                      
+                      <div className="mt-2">
+                        <div className="mb-2 flex items-center gap-2">
+                          <Layers size={15} className="text-purple-400" />
+                          <h2 className="text-sm font-semibold tracking-wide text-white/90">
+                            Technologies
+                          </h2>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                          {project.tech.map((t) => (
+                            <span
+                              key={t}
+                              className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/75 transition-all hover:border-white/20 hover:bg-white/8"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </section>
+
+                    
+                    {/* Mobile/tablet actions */}
+                    <section className="lg:hidden">
+                      <h3 className="mb-3 text-sm font-semibold tracking-wide text-white/90">
+                        Actions
+                      </h3>
+
+                      <div className="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
+                        {project.live && project.live !== '#' && (
+                          <ActionButton
+                            href={project.live}
+                            icon={<ExternalLink size={16} />}
+                            label="Voir le projet"
+                            sublabel="Live / Preview"
+                            variant="primary"
+                          />
+                        )}
+
+                        {project.code && project.code !== '#' && (
+                          <ActionButton
+                            href={project.code}
+                            icon={<Github size={16} />}
+                            label="Code source"
+                            sublabel="Repository"
+                            variant="secondary"
+                          />
+                        )}
+
+                        <ActionButton
+                          href={SITE.contact.cal}
+                          icon={<CalendarDays size={16} />}
+                          label="Discuter du projet"
+                          sublabel="15–30 min"
+                          variant="ghost"
+                        />
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </motion.section>
+        </main>
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox && (
           <Lightbox
@@ -399,34 +472,74 @@ export default function ProjectPage() {
   );
 }
 
-// ── Helper ────────────────────────────────────────────────────────────────────
+// ── UI Helpers ───────────────────────────────────────────────────────────────
 
-function LinkButton({
-  href, icon, label, sublabel, gradient,
+function InfoRow({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2 rounded-xl border border-white/8 bg-white/[0.03] px-2.5 py-2">
+      <div className="flex min-w-0 items-center gap-1.5 text-white/70">
+        <div className="flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/5">
+          {icon}
+        </div>
+        <span className="text-[10px] font-medium uppercase tracking-wide text-white/45">
+          {label}
+        </span>
+      </div>
+
+      <span className="truncate text-right text-xs font-medium text-white/85">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function ActionButton({
+  href,
+  icon,
+  label,
+  sublabel,
+  variant,
 }: {
   href: string;
   icon: React.ReactNode;
   label: string;
   sublabel?: string;
-  gradient: string;
+  variant: 'primary' | 'secondary' | 'ghost';
 }) {
+  const styles =
+    variant === 'primary'
+      ? 'border-cyan-400/20 bg-gradient-to-r from-cyan-500/15 to-blue-500/15 hover:from-cyan-500/20 hover:to-blue-500/20'
+      : variant === 'secondary'
+      ? 'border-purple-400/20 bg-gradient-to-r from-purple-500/15 to-fuchsia-500/15 hover:from-purple-500/20 hover:to-fuchsia-500/20'
+      : 'border-white/10 bg-white/5 hover:bg-white/10';
+
   return (
     <motion.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-between p-2.5 rounded-xl bg-gradient-to-r ${gradient} hover:shadow-lg transition-all overflow-hidden relative group"
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      className={`group flex items-center justify-center rounded-lg border px-4 py-2 backdrop-blur-xl transition-all min-w-40 h-16 ${styles}`}
     >
-      <div className="flex items-center gap-2 relative z-10">
-        <div className="bg-white/20 p-1 rounded-md">{icon}</div>
+      <div className="flex items-center gap-2 text-left">
+        <div className="flex h-6 w-6 items-center justify-center rounded-md border border-white/10 bg-white/8 text-white/85">
+          {icon}
+        </div>
+
         <div>
-          <div className="font-semibold text-xs">{label}</div>
-          {sublabel && <div className="text-xs opacity-80">{sublabel}</div>}
+          <div className="text-xs font-semibold text-white/90">{label}</div>
+          {sublabel && <div className="text-[10px] text-white/50">{sublabel}</div>}
         </div>
       </div>
-      <ArrowLeft size={12} className="rotate-180 group-hover:translate-x-0.5 transition-transform relative z-10" />
     </motion.a>
   );
 }
