@@ -16,6 +16,12 @@ export interface Project {
   imageCount?: number;
 }
 
+export const TYPE_COLOR: Record<ProjectType, string> = {
+  web:     'from-blue-400/50 to-cyan-400/50',
+  mobile:  'from-emerald-400/50 to-green-400/50',
+  desktop: 'from-indigo-400/50 to-purple-400/50',
+};
+
 export const projects: Project[] = [
   {
     id: 1,
@@ -150,7 +156,6 @@ export const projects: Project[] = [
       'AWS Amplify',
       'AWS Cognito',
       'AWS S3',
-      'AES-256',
       'AWS Lambda',
       'AWS API Gateway',
       'JUnit',
@@ -158,7 +163,6 @@ export const projects: Project[] = [
       'Jest',
       'GitLab CI/CD',
       'Scrum',
-      'Google Play Publishing API',
     ],
     live: '#',
     code: '#',

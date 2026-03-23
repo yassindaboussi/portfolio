@@ -1,613 +1,110 @@
-// app/page.tsx
 'use client';
+// app/page.tsx
+// ─────────────────────────────────────────────
+// Main portfolio page.
+// To add/remove sections, just add/remove the
+// component here. Section content lives in
+// src/components/* and config in src/data/*.
+// ─────────────────────────────────────────────
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Menu,
-  X,
-  Mail,
-  Download,
-  Globe,
-  Smartphone,
-  Monitor,
-  CalendarDays,
-  Phone,
-  ExternalLink,
-  Github,
-  Eye,
-  CodeXml,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { projects } from '@/data/projects';
+import { motion } from 'framer-motion';
+
+import Navbar  from '@/components/Navbar';
+import Hero    from '@/components/Hero';
+import Profile from '@/components/Profile';
+import Skills  from '@/components/Skills';
+import Projects from '@/components/Projects';
+import Contact from '@/components/Contact';
+import { SITE } from '@/data/config';
 
 export default function Page() {
-  const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'web' | 'mobile' | 'desktop'>('all');
   const [activeSection, setActiveSection] = useState('home');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
-  // Mouse trail effect
+  // Track mouse for ambient glow cursor
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => setMousePosition({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const onMove = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY });
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
   }, []);
 
-  // Section observer for active nav
+  // Highlight active nav item while scrolling.
+  // rootMargin '-40% 0px -55% 0px' creates a narrow detection band in the
+  // middle of the viewport — works for both short and very tall sections.
   useEffect(() => {
+    const ids = ['home', 'profile', 'skills', 'projects', 'contact'];
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActiveSection(e.target.id);
         });
       },
-      { threshold: 0.5 }
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 },
     );
-    ['home', 'profile', 'skills', 'projects', 'contact'].forEach((id) => {
+    ids.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMenuOpen(false);
-  };
-
-  const filtered = filter === 'all' ? projects : projects.filter((p) => p.type === filter);
-
-  const filters = [
-    { key: 'all', label: 'Tous', icon: CodeXml, color: 'from-purple-500 to-pink-500' },
-    { key: 'web', label: 'Web', icon: Globe, color: 'from-blue-500 to-cyan-500' },
-    { key: 'mobile', label: 'Mobile', icon: Smartphone, color: 'from-emerald-500 to-green-500' },
-    { key: 'desktop', label: 'Desktop', icon: Monitor, color: 'from-indigo-500 to-purple-600' },
-  ];
-
-  // Use slug for banner image
-  const getProjectBanner = (project: typeof projects[0]) => {
-    return `/project/${project.type}/${project.slug}/1.jpg`;
-  };
-
   return (
     <>
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        body {
-          background: #0f0f1a;
-          color: #fff;
-          font-family: 'Inter', sans-serif;
-          overflow-x: hidden;
-        }
-        .glass {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .gradient-text {
-          background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-      `}</style>
-
-      {/* Mouse trail */}
+      {/* Ambient cursor glow */}
       <motion.div
-        className="fixed w-8 h-8 rounded-full bg-gradient-to-r from-purple-500/30 to-cyan-400/30 pointer-events-none z-50 blur-xl"
-        animate={{ x: mousePosition.x - 16, y: mousePosition.y - 16 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        className="fixed w-10 h-10 rounded-full pointer-events-none z-50 blur-xl bg-gradient-to-r from-purple-500/25 to-cyan-400/25"
+        animate={{ x: mouse.x - 20, y: mouse.y - 20 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 28 }}
       />
 
-      {/* Navigation */}
-      <motion.nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
-        <div className="glass px-6 py-3 rounded-full flex items-center gap-8 backdrop-blur-xl">
-          <div className="hidden md:flex items-center gap-1">
-            {['home', 'profile', 'skills', 'projects', 'contact'].map(id => (
-              <motion.button
-                key={id}
-                onClick={() => scrollTo(id)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                {id === 'home'
-                  ? 'Accueil'
-                  : id === 'profile'
-                  ? 'Profil'
-                  : id === 'skills'
-                  ? 'Compétences'
-                  : id === 'projects'
-                  ? 'Projets'
-                  : 'Contact'}
-              </motion.button>
-            ))}
-          </div>
-          <motion.a
-            href="https://cal.com/yassin-daboussi"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 px-6 py-2.5 rounded-full font-semibold flex items-center gap-2 shadow-xl hover:shadow-purple-500/50 transition-all"
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <CalendarDays size={18} />
-            Prendre RDV
-          </motion.a>
-          <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden">
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-      </motion.nav>
+      {/* Background orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-purple-700/15 blur-3xl" style={{ animation: 'float 8s ease-in-out infinite' }} />
+        <div className="absolute top-1/2 -right-40 w-96 h-96 rounded-full bg-cyan-700/15 blur-3xl" style={{ animation: 'float 10s ease-in-out infinite 2s' }} />
+      </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="fixed inset-0 z-40 glass"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="flex flex-col items-center justify-center h-full gap-8 text-2xl">
-            {['home', 'profile', 'skills', 'projects', 'contact'].map((id) => (
-              <motion.button
-                key={id}
-                onClick={() => scrollTo(id)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${activeSection === id ? 'bg-white/10' : 'hover:bg-white/5'}`}
-                whileHover={{ scale: 1.05 }}
-              >
-                {id === 'home' ? 'Accueil' :
-                 id === 'profile' ? 'Profil' :
-                 id === 'skills' ? 'Compétences' :
-                 id === 'projects' ? 'Projets' : 'Contact'}
-              </motion.button>
-            ))}
-              <a
-                href="https://cal.com/yassin-daboussi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 px-10 py-5 rounded-full font-bold text-lg flex items-center gap-3 shadow-2xl"
-              >
-                <CalendarDays size={24} />
-                Prendre RDV
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Navbar  activeSection={activeSection} />
+      <Hero    />
+      <Profile />
+      <Skills  />
+      <Projects />
+      <Contact />
 
-      {/* Hero */}
-      <section id="home" className="min-h-screen flex items-center justify-center px-6">
-        <div className="text-center max-w-4xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-            <span className="text-cyan-400 font-medium text-lg">Ingénieur Full-Stack • One-man army</span>
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-6xl md:text-8xl font-black mb-6"
-          >
-            Yassin <span className="gradient-text">Daboussi</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto"
-          >
-            Je transforme des idées en applications performantes, du concept à la production.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-          >
-          <motion.a
-            href="/data/CV_Daboussi_Yassin.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full font-semibold flex items-center justify-center gap-3 shadow-xl hover:shadow-cyan-500/50 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Download size={20} /> Télécharger mon CV
-          </motion.a>
-            <button onClick={() => scrollTo('projects')} className="glass px-8 py-4 rounded-full font-medium">
-              Voir mes projets
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Profile */}
-      <section id="profile" className="py-20 px-6 max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="grid md:grid-cols-2 gap-12 items-center"
-        >
-          <div className="order-2 md:order-1">
-            <h2 className="text-5xl font-bold mb-6">
-              À propos de <span className="gradient-text">moi</span>
-            </h2>
-            <p className="text-lg text-gray-300 mb-6 leading-relaxed">
-              Ingénieur Full-Stack passionné, je construis des applications robustes et scalables de A à Z, en web, backend et mobile.
-            </p>
-            <p className="text-lg text-gray-300 mb-8 leading-relaxed">
-              J'adopte une approche "one-man army" : ma passion me pousse à aller au-delà du code, avec le souci du détail et d'une vraie expérience utilisateur.
-            </p>
-            
-            {/* Liens LinkedIn et GitHub */}
-            <div className="flex gap-4 mb-8">
-              <motion.a
-                href="https://linkedin.com/in/yassindaboussi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass px-6 py-3 rounded-lg flex items-center gap-3 hover:bg-white/10 transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <img 
-                  src="/icons/linkedin.svg" 
-                  alt="LinkedIn" 
-                  className="w-5 h-5"
-                  onError={(e) => {
-                    // Fallback si l'icône n'existe pas
-                    e.currentTarget.style.display = 'none';
-                    const parent = e.currentTarget.parentElement;
-                    if (parent) {
-                      parent.innerHTML = '<span class="font-medium">LinkedIn</span>';
-                    }
-                  }}
-                />
-                <span className="font-medium">LinkedIn</span>
-                <ExternalLink size={14} className="text-gray-400" />
-              </motion.a>
-              
-              <motion.a
-                href="https://github.com/yassindaboussi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass px-6 py-3 rounded-lg flex items-center gap-3 hover:bg-white/10 transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Github size={20} />
-                <span className="font-medium">GitHub</span>
-                <ExternalLink size={14} className="text-gray-400" />
-              </motion.a>
-            </div>
-            
-            <div className="flex gap-4">
-              <div className="text-center">
-                <div className="text-4xl font-bold gradient-text">1+</div>
-                <div className="text-sm text-gray-400">Ans d'expérience</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold gradient-text">30+</div>
-                <div className="text-sm text-gray-400">Projets livrés</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold gradient-text">100%</div>
-                <div className="text-sm text-gray-400">Autonome</div>
-              </div>
-            </div>
-          </div>
-          <div className="order-1 md:order-2 flex justify-center">
-            <motion.div whileHover={{ scale: 1.05 }} className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-3xl blur-xl opacity-50"></div>
-              <div className="relative p-2 rounded-3xl bg-gradient-to-br from-purple-600/30 to-cyan-600/30 inline-block">
-                <img src="/images/yassin.jpg" alt="Yassin Daboussi" className="rounded-3xl max-w-full h-auto block" />
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Skills */}
-      <section id="skills" className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-5xl md:text-6xl font-bold mb-4">
-            Technos que je <span className="gradient-text">maîtrise</span>
-          </h2>
-          <p className="text-xl text-gray-400">Full-Stack • Mobile • Cloud</p>
-        </motion.div>
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-6">
-          {[
-            { name: 'Kotlin', icon: 'kotlin' },
-            { name: 'Node.js', icon: 'nodejs' },
-            { name: 'Nextjs', icon: 'nextjs' },
-            { name: 'React', icon: 'react' },
-            { name: 'Flutter', icon: 'flutter' },
-            { name: 'MongoDB', icon: 'mongodb' },
-            { name: 'MySQL', icon: 'mysql' },
-            { name: 'SnowFlake', icon: 'snowflake' },
-            { name: 'AWS', icon: 'aws' },
-            { name: 'GIT', icon: 'git' },
-          ].map((tech, i) => (
-            <motion.div
-              key={tech.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="group"
-            >
-              <div className="glass rounded-2xl p-6 transition-all duration-300 group-hover:bg-white/10 group-hover:scale-110 group-hover:shadow-2xl group-hover:shadow-purple-500/20 flex flex-col items-center justify-center gap-3 min-h-32">
-                <img src={`/icons/${tech.icon}.svg`} alt={tech.name} className="w-16 h-16 object-contain" />
-                <p className="text-xs text-gray-400 font-medium">{tech.name}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Projects */}
-      <section id="projects" className="py-20 px-6 max-w-7xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-5xl font-bold text-center mb-4">
-            Mes <span className="gradient-text">Projets</span>
-          </h2>
-          <p className="text-center text-gray-400 mb-12">Des solutions complètes, livrées avec passion</p>
-
-          {/* Filter Buttons - Enhanced */}
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
-            {filters.map((f) => {
-              const Icon = f.icon;
-              const active = filter === f.key;
-              const count = f.key === 'all' ? projects.length : projects.filter(p => p.type === f.key).length;
-              
-              return (
-                <motion.button
-                  key={f.key}
-                  onClick={() => setFilter(f.key as any)}
-                  className={`relative flex items-center gap-3 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
-                    active
-                      ? `bg-gradient-to-r ${f.color} text-white shadow-xl shadow-purple-500/20`
-                      : 'glass hover:bg-white/10 hover:shadow-lg'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Icon size={18} className={active ? 'text-white' : 'text-gray-400'} />
-                  <span>{f.label}</span>
-                  <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${
-                    active ? 'bg-white/20' : 'bg-white/5'
-                  }`}>
-                    {count}
-                  </span>
-                  
-                  {active && (
-                    <motion.div
-                      layoutId="activeFilter"
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 to-transparent"
-                      initial={false}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <AnimatePresence mode="popLayout">
-              {filtered.length > 0 ? (
-              filtered.map((project, i) => (
-                <motion.article
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="glass rounded-2xl overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/30 transition-all"
-                  whileHover={{ y: -8 }}
-                >
-                  <div className="relative h-52 overflow-hidden">
-                    <img
-                      src={getProjectBanner(project)}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                    <div className="hidden absolute inset-0 bg-gradient-to-br from-purple-600/20 to-cyan-600/20 flex items-center justify-center">
-                      <div className="text-7xl font-black text-white/20">{project.title[0]}</div>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                  <span
-                    className={`absolute top-4 right-4 text-xs px-3 py-1.5 backdrop-blur-md rounded-full capitalize font-medium
-                    border border-white/10
-                    ${
-                      project.type === 'web'
-                        ? 'bg-gradient-to-r from-blue-400/60 to-cyan-400/60 text-white/90'
-                        : project.type === 'mobile'
-                        ? 'bg-gradient-to-r from-emerald-400/60 to-green-400/60 text-white/90'
-                        : project.type === 'desktop'
-                        ? 'bg-gradient-to-r from-indigo-400/60 to-purple-400/60 text-white/90'
-                        : 'bg-gradient-to-r from-purple-400/60 to-pink-400/60 text-white/90'
-                    }`}
-                  >
-                    {project.type}
-                  </span>
-
-                  </div>
-                  
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                    <p className="text-sm text-purple-300 mb-3 font-medium">
-                      {project.company === 'Freelance' 
-                        ? 'Freelance' 
-                        : project.company === 'Open Source'
-                          ? 'Open Source'
-                          : project.company === 'Projet Personnel'
-                            ? 'Projet Personnel'
-                            : `chez ${project.company}`}
-                    </p>
-                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.desc}</p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech.slice(0, 3).map((t) => (
-                        <span key={t} className="text-xs px-2.5 py-1 bg-white/5 rounded-lg border border-white/10">
-                          {t}
-                        </span>
-                      ))}
-                      {project.tech.length > 3 && (
-                        <span className="text-xs text-gray-500 self-center">+{project.tech.length - 3}</span>
-                      )}
-                    </div>
-
-                    <div className="flex gap-2 pt-3 border-t border-white/10">
-                      <motion.button
-                        onClick={() => router.push(`/projects/${project.slug}`)}
-                        className="flex-1 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 px-4 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Eye size={16} />
-                        Voir le détail
-                      </motion.button>
-                      
-                      {/* GitHub Code Link */}
-                      {project.code && project.code !== '#' && (
-                        <motion.a
-                          href={project.code}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="glass hover:bg-white/15 px-4 py-2.5 rounded-lg flex items-center justify-center transition-all"
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          title="Voir le code source"
-                        >
-                          <Github size={18} />
-                        </motion.a>
-                      )}
-                      
-                      {/* Live Demo Link */}
-                      {project.live && project.live !== '#' && (
-                        <motion.a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="glass hover:bg-white/15 px-4 py-2.5 rounded-lg flex items-center justify-center transition-all"
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          title="Voir la démo en direct"
-                        >
-                          <ExternalLink size={18} />
-                        </motion.a>
-                      )}
-                    </div>
-                  </div>
-                </motion.article>
-              ))
-              ) :
-               (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="col-span-full flex flex-col items-center justify-center py-12 text-center"      
-                >
-                <div className="relative mb-8">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/10 to-cyan-500/10 flex items-center justify-center">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center">
-                      <svg
-                        className="w-12 h-12 text-purple-400/50"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                <h3 className="text-2xl font-bold text-white mb-3">
-                  Aucun projet trouvé
-                </h3>
-                <p className="text-gray-400 max-w-2xl text-lg leading-relaxed">
-                  Il n'y a actuellement aucun projet dans cette catégorie. 
-                  Essayez une autre filtre ou revenez plus tard pour découvrir de nouvelles réalisations.
-                </p>
-
-                <motion.button
-                  onClick={() => setFilter('all')}
-                  className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 rounded-full font-medium text-white shadow-lg shadow-purple-500/25 transition-all"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Voir tous les projets
-                </motion.button>
-              </motion.div>
-              )}
-                      
-            </AnimatePresence>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Contact */}
-      <section id="contact" className="py-20 px-6 max-w-4xl mx-auto text-center">
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}>
-          <h2 className="text-5xl font-bold mb-6">
-            On travaille <span className="gradient-text">ensemble ?</span>
-          </h2>
-          <p className="text-xl text-gray-400 mb-12">
-            Disponible pour des missions freelance ou un poste en CDI.
+      <footer className="py-10 border-t border-white/8">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/30 text-sm">
+            © {new Date().getFullYear()} Yassin Daboussi — Fait avec Next.js & Tailwind
           </p>
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <a className="glass p-8 rounded-2xl hover:bg-white/10 transition">
-              <Mail className="mx-auto mb-4 text-purple-400" size={32} />
-              <p className="font-medium">yassin.daboussi@esprit.tn</p>
+          <div className="flex items-center gap-4">
+            <a
+              href={SITE.contact.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/30 hover:text-white/70 transition-colors text-sm font-medium"
+            >
+              LinkedIn
             </a>
-            <a href="https://cal.com/yassin-daboussi" target="_blank" rel="noopener noreferrer" className="glass p-8 rounded-2xl hover:bg-white/10 transition">
-              <CalendarDays className="mx-auto mb-4 text-cyan-400" size={32} />
-              <p className="font-medium">Réserver un call</p>
+            <span className="text-white/10">·</span>
+            <a
+              href={SITE.contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/30 hover:text-white/70 transition-colors text-sm font-medium"
+            >
+              GitHub
             </a>
-            <div className="glass p-8 rounded-2xl">
-              <Phone className="mx-auto mb-4 text-green-400" size={32} />
-              <p className="font-medium">+216 29 670 343</p>
-            </div>
+            <span className="text-white/10">·</span>
+            <a
+              href={SITE.cv}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/30 hover:text-white/70 transition-colors text-sm font-medium"
+            >
+              CV
+            </a>
           </div>
-        <a
-          href="/data/CV_Daboussi_Yassin.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500 to-cyan-500 px-10 py-5 rounded-full text-lg font-semibold shadow-2xl hover:shadow-cyan-500/50 transition-all"
-        >
-          <Download /> Télécharger mon CV
-        </a>
-        </motion.div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 text-center text-gray-500 text-sm border-t border-white/10">
-        © {new Date().getFullYear()} Yassin Daboussi — Fait avec Next.js & Tailwind
+        </div>
       </footer>
     </>
   );
